@@ -1,7 +1,5 @@
 require_relative "test_helper"
 
-require "pgvector/pg"
-
 class TestPg < Minitest::Test
   def test_works
     conn.exec("DROP TABLE IF EXISTS items")
