@@ -2,9 +2,6 @@ require_relative "test_helper"
 
 class TestPg < Minitest::Test
   def test_works
-    conn.exec("DROP TABLE IF EXISTS items")
-    conn.exec("CREATE TABLE items (id bigserial primary key, factors vector(3))")
-
     factors = [1.5, 2, 3]
     conn.exec_params("INSERT INTO items (factors) VALUES ($1), (NULL)", [factors])
 
@@ -19,6 +16,8 @@ class TestPg < Minitest::Test
 
       # TODO check if exists to prevent warning
       conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
+      conn.exec("DROP TABLE IF EXISTS items")
+      conn.exec("CREATE TABLE items (id bigserial primary key, factors vector(3))")
 
       registry = PG::BasicTypeRegistry.new.define_default_types
       Pgvector::PG.register_vector(registry)
