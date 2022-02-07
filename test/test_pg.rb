@@ -20,7 +20,7 @@ class TestPg < Minitest::Test
   end
 
   def conn
-    @conn ||= begin
+    @@conn ||= begin
       conn = PG.connect(dbname: "pgvector_ruby_test")
 
       unless conn.exec("SELECT 1 FROM pg_extension WHERE extname = 'vector'").any?
