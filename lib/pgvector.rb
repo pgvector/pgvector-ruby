@@ -1,0 +1,1 @@
+require "pgvector/version"
