@@ -1,6 +1,10 @@
 require_relative "test_helper"
 
 class TestPg < Minitest::Test
+  def setup
+    conn.exec("DELETE FROM items")
+  end
+
   def test_text
     factors = [1.5, 2, 3]
     conn.exec_params("INSERT INTO items (factors) VALUES ($1), (NULL)", [factors])
