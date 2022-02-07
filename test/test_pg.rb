@@ -1,11 +1,20 @@
 require_relative "test_helper"
 
 class TestPg < Minitest::Test
-  def test_works
+  def test_text
     factors = [1.5, 2, 3]
     conn.exec_params("INSERT INTO items (factors) VALUES ($1), (NULL)", [factors])
 
     res = conn.exec("SELECT * FROM items ORDER BY id").to_a
+    assert_equal factors, res[0]["factors"]
+    assert_nil res[1]["factors"]
+  end
+
+  def test_binary
+    factors = [1.5, 2, 3]
+    conn.exec_params("INSERT INTO items (factors) VALUES ($1), (NULL)", [factors])
+
+    res = conn.exec("SELECT * FROM items ORDER BY id", [], 1).to_a
     assert_equal factors, res[0]["factors"]
     assert_nil res[1]["factors"]
   end
