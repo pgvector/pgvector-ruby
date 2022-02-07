@@ -23,8 +23,9 @@ class TestPg < Minitest::Test
     @conn ||= begin
       conn = PG.connect(dbname: "pgvector_ruby_test")
 
-      # TODO check if exists to prevent warning
-      conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
+      unless conn.exec("SELECT 1 FROM pg_extension WHERE extname = 'vector'").any?
+        conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
+      end
       conn.exec("DROP TABLE IF EXISTS items")
       conn.exec("CREATE TABLE items (id bigserial primary key, factors vector(3))")
 
