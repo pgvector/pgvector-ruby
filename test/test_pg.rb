@@ -18,12 +18,14 @@ class TestPg < Minitest::Test
   def conn
     @conn ||= begin
       conn = PG.connect(dbname: "pgvector_ruby_test")
+
+      # TODO check if exists to prevent warning
+      conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
+
       registry = PG::BasicTypeRegistry.new.define_default_types
       Pgvector::PG.register_vector(registry)
       conn.type_map_for_queries = PG::BasicTypeMapForQueries.new(conn, registry: registry)
       conn.type_map_for_results = PG::BasicTypeMapForResults.new(conn, registry: registry)
-      # TODO check if exists to prevent warning
-      conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
       conn
     end
   end
