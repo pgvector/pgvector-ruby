@@ -25,8 +25,6 @@ And follow the instructions for your database library:
 Register the vector type with your connection
 
 ```ruby
-require "pgvector/pg"
-
 registry = PG::BasicTypeRegistry.new.define_default_types
 Pgvector::PG.register_vector(registry)
 conn.type_map_for_results = PG::BasicTypeMapForResults.new(conn, registry: registry)
