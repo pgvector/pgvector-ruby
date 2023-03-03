@@ -33,14 +33,14 @@ conn.type_map_for_results = PG::BasicTypeMapForResults.new(conn, registry: regis
 Insert a vector
 
 ```ruby
-factors = [1, 2, 3]
-conn.exec_params("INSERT INTO items (factors) VALUES ($1)", [factors])
+embedding = [1, 2, 3]
+conn.exec_params("INSERT INTO items (embedding) VALUES ($1)", [embedding])
 ```
 
 Get the nearest neighbors to a vector
 
 ```ruby
-conn.exec_params("SELECT * FROM items ORDER BY factors <-> $1 LIMIT 5", [factors]).to_a
+conn.exec_params("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [embedding]).to_a
 ```
 
 ## History
