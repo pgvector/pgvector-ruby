@@ -20,7 +20,7 @@ module Pgvector
     module TextDecoder
       class Vector < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          string[1..-2].split(",").map(&:to_f)
+          Pgvector.decode(string)
         end
       end
     end

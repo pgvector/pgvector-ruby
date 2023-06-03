@@ -19,7 +19,7 @@ gem "pgvector"
 And follow the instructions for your database library:
 
 - [pg](#pg)
-- [Sequel](#sequel)
+- [Sequel](#sequel) [unreleased]
 
 ## pg
 
@@ -58,13 +58,13 @@ end
 Insert a vector
 
 ```ruby
-DB[:items].insert(embedding: "[1,1,1]")
+DB[:items].insert(embedding: Pgvector.encode([1, 1, 1]))
 ```
 
 Get the nearest neighbors to a vector
 
 ```ruby
-DB[:items].order(Sequel.lit("embedding <-> ?", "[1,1,1]")).limit(5).all
+DB[:items].order(Sequel.lit("embedding <-> ?", Pgvector.encode([1, 1, 1]))).limit(5).all
 ```
 
 ## History

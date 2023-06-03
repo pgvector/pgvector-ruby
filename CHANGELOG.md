@@ -1,3 +1,7 @@
+## 0.2.1 (unreleased)
+
+- Added support for Sequel
+
 ## 0.2.0 (2023-05-11)
 
 - Dropped support for Ruby < 3
