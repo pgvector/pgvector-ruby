@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for Ruby
 
-Supports the [pg](https://github.com/ged/ruby-pg) gem
+Supports [pg](https://github.com/ged/ruby-pg) and [Sequel](https://github.com/jeremyevans/sequel)
 
 For Rails, check out [Neighbor](https://github.com/ankane/neighbor)
 
@@ -19,6 +19,7 @@ gem "pgvector"
 And follow the instructions for your database library:
 
 - [pg](#pg)
+- [Sequel](#sequel)
 
 ## pg
 
@@ -41,6 +42,29 @@ Get the nearest neighbors to a vector
 
 ```ruby
 conn.exec_params("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [embedding]).to_a
+```
+
+## Sequel
+
+Create a table
+
+```ruby
+DB.create_table :items do
+  primary_key :id
+  column :embedding, "vector(3)"
+end
+```
+
+Insert a vector
+
+```ruby
+DB[:items].insert(embedding: "[1,1,1]")
+```
+
+Get the nearest neighbors to a vector
+
+```ruby
+DB[:items].order(Sequel.lit("embedding <-> ?", "[1,1,1]")).limit(5).all
 ```
 
 ## History
