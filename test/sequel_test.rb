@@ -15,8 +15,7 @@ class TestSequel < Minitest::Test
 
   def test_works
     items.insert(embedding: "[1,1,1]")
-    items.insert(embedding: "[2,2,2]")
-    items.insert(embedding: "[1,1,2]")
+    items.multi_insert([{embedding: "[2,2,2]"}, {embedding: "[1,1,2]"}])
     results = items.order(Sequel.lit("embedding <-> ?", "[1,1,1]")).limit(5).all
     assert_equal [1, 3, 2], results.map { |r| r[:id] }
   end
