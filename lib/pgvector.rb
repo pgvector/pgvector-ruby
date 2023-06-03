@@ -5,7 +5,7 @@ module Pgvector
   autoload :PG, "pgvector/pg"
 
   def self.encode(data)
-    "[#{data.map(&:to_f).join(",")}]"
+    "[#{data.to_a.map(&:to_f).join(",")}]"
   end
 
   def self.decode(string)
