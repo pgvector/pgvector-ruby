@@ -1,6 +1,6 @@
 require_relative "test_helper"
 
-class TestPg < Minitest::Test
+class PgTest < Minitest::Test
   def setup
     conn.exec("DELETE FROM items")
   end
