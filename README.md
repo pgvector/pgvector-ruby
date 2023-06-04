@@ -75,13 +75,19 @@ Insert a vector
 Item.create(embedding: Pgvector.encode([1, 1, 1]))
 ```
 
+Get the nearest neighbors to a record
+
+```ruby
+item.nearest_neighbors(:embedding, distance: "euclidean").limit(5)
+```
+
+Also supports `inner_product` and `cosine` distance
+
 Get the nearest neighbors to a vector
 
 ```ruby
 Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
 ```
-
-Also supports `inner_product` and `cosine` distance
 
 ## History
 
