@@ -33,6 +33,7 @@ class TestSequel < Minitest::Test
 
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
     assert_equal ["[1,1,1]", "[1,1,2]", "[2,2,2]"], results.map(&:embedding)
+    assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
 
     results = Item.first.nearest_neighbors(:embedding, distance: "euclidean").limit(5)
     assert_equal ["[1,1,2]", "[2,2,2]"], results.map(&:embedding)
