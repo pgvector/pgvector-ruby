@@ -60,6 +60,14 @@ module Sequel
             super
           end
         end
+
+        def [](k)
+          if self.class.vector_columns.key?(k)
+            ::Pgvector.decode(super)
+          else
+            super
+          end
+        end
       end
     end
   end
