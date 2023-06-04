@@ -59,12 +59,16 @@ Insert a vector
 
 ```ruby
 DB[:items].insert(embedding: Pgvector.encode([1, 1, 1]))
+# or
+Item.create(embedding: Pgvector.encode([1, 1, 1]))
 ```
 
 Get the nearest neighbors to a vector
 
 ```ruby
-DB[:items].order(Sequel.lit("embedding <-> ?", Pgvector.encode([1, 1, 1]))).limit(5).all
+DB[:items].order(Sequel.lit("embedding <-> ?", Pgvector.encode([1, 1, 1]))).limit(5)
+# or
+Item.order(Sequel.lit("embedding <-> ?", Pgvector.encode([1, 1, 1]))).limit(5)
 ```
 
 ## History
