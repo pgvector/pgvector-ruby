@@ -21,6 +21,12 @@ And follow the instructions for your database library:
 - [pg](#pg)
 - [Sequel](#sequel) [unreleased]
 
+Or check out some examples:
+
+- [Embeddings](examples/openai_embeddings.rb) with OpenAI
+- [User-based recommendations](examples/disco_user_recs.rb) with Disco
+- [Item-based recommendations](examples/disco_item_recs.rb) with Disco
+
 ## pg
 
 Register the vector type with your connection
