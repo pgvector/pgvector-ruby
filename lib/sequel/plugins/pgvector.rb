@@ -2,7 +2,10 @@ module Sequel
   module Plugins
     module Pgvector
       def self.configure(model, *columns)
-        model.vector_columns = columns.to_h { |c| [c.to_sym, {}] }
+        model.vector_columns ||= {}
+        columns.each do |column|
+          model.vector_columns[column.to_sym] = {}
+        end
       end
 
       module ClassMethods
