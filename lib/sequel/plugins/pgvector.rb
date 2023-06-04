@@ -54,7 +54,7 @@ module Sequel
         end
 
         def []=(k, v)
-          if self.class.vector_columns.key?(k) && !v.is_a?(String)
+          if self.class.vector_columns.key?(k.to_sym) && !v.is_a?(String)
             super(k, ::Pgvector.encode(v))
           else
             super
@@ -62,7 +62,7 @@ module Sequel
         end
 
         def [](k)
-          if self.class.vector_columns.key?(k)
+          if self.class.vector_columns.key?(k.to_sym)
             ::Pgvector.decode(super)
           else
             super
