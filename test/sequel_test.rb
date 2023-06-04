@@ -23,7 +23,7 @@ class TestSequel < Minitest::Test
     items.insert(embedding: Pgvector.encode([1, 1, 1]))
     items.multi_insert([{embedding: "[2,2,2]"}, {embedding: "[1,1,2]"}])
     results = items.order(Sequel.lit("embedding <-> ?", Pgvector.encode([1, 1, 1]))).limit(5)
-    assert_equal ["[1,1,1]", "[1,1,2]", "[2,2,2]"], results.map { |r| r[:embedding] }
+    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding]) }
   end
 
   def test_model
