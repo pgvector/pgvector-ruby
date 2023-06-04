@@ -25,16 +25,18 @@ module Sequel
 
           raise ArgumentError, "Invalid distance: #{distance}" unless operator
 
+          order = "#{quoted_column} #{operator} ?"
+
           neighbor_distance =
             if distance == "inner_product"
-              "(#{quoted_column} #{operator} ?) * -1"
+              "(#{order}) * -1"
             else
-              "#{quoted_column} #{operator} ?"
+              order
             end
 
           select_append(Sequel.lit("#{neighbor_distance} AS neighbor_distance", value))
             .exclude(column => nil)
-            .order(Sequel.lit("#{quoted_column} #{operator} ?", value))
+            .order(Sequel.lit(order, value))
         end
 
         Plugins.inherited_instance_variables(self, :@vector_columns => :dup)
