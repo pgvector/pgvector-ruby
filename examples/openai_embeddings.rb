@@ -15,6 +15,7 @@ DB.create_table :articles do
 end
 
 class Article < Sequel::Model
+  plugin :pgvector, :embedding
 end
 
 # https://platform.openai.com/docs/guides/embeddings/how-to-get-embeddings
@@ -49,4 +50,4 @@ Article.multi_insert(articles)
 
 article = Article.first
 # use inner product for performance since embeddings are normalized
-pp Article.exclude(id: article.id).order(Sequel.lit("embedding <#> ?", article.embedding)).limit(5).map(&:content)
+pp article.nearest_neighbors(:embedding, distance: "inner_product").limit(5).map(&:content)
