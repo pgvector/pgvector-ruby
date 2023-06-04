@@ -11,6 +11,7 @@ DB.create_table :sequel_items do
 end
 
 class Item < Sequel::Model(DB[:sequel_items])
+  plugin :pgvector, :embedding
 end
 
 class TestSequel < Minitest::Test
@@ -29,7 +30,7 @@ class TestSequel < Minitest::Test
     Item.create(embedding: Pgvector.encode([1, 1, 1]))
     Item.create(embedding: Pgvector.encode([2, 2, 2]))
     Item.create(embedding: Pgvector.encode([1, 1, 2]))
-    results = Item.order(Sequel.lit("embedding <-> ?", Pgvector.encode([1, 1, 1]))).limit(5)
+    results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
     assert_equal ["[1,1,1]", "[1,1,2]", "[2,2,2]"], results.map(&:embedding)
   end
 

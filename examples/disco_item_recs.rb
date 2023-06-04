@@ -14,6 +14,7 @@ DB.create_table :movies do
 end
 
 class Movie < Sequel::Model
+  plugin :pgvector, :factors
 end
 
 data = Disco.load_movielens
@@ -27,4 +28,4 @@ end
 Movie.multi_insert(movies)
 
 movie = Movie.first(name: "Star Wars (1977)")
-pp Movie.exclude(id: movie.id).order(Sequel.lit("factors <=> ?", movie.factors)).limit(5).map(&:name)
+pp movie.nearest_neighbors(:factors, distance: "cosine").limit(5).map(&:name)

@@ -20,9 +20,11 @@ DB.create_table :users do
 end
 
 class Movie < Sequel::Model
+  plugin :pgvector, :factors
 end
 
 class User < Sequel::Model
+  plugin :pgvector, :factors
 end
 
 data = Disco.load_movielens
@@ -42,7 +44,7 @@ end
 User.multi_insert(users)
 
 user = User[123]
-pp Movie.order(Sequel.lit("factors <#> ?", user.factors)).limit(5).map(&:name)
+pp Movie.nearest_neighbors(:factors, user.factors, distance: "inner_product").limit(5).map(&:name)
 
 # excludes rated, so will be different for some users
 # pp recommender.user_recs(user.id).map { |v| v[:item_id] }
