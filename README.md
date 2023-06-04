@@ -72,7 +72,7 @@ end
 Insert a vector
 
 ```ruby
-Item.create(embedding: Pgvector.encode([1, 1, 1]))
+Item.create(embedding: [1, 1, 1])
 ```
 
 Get the nearest neighbors to a record

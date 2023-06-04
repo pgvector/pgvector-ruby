@@ -27,9 +27,9 @@ class TestSequel < Minitest::Test
   end
 
   def test_model
-    Item.create(embedding: Pgvector.encode([1, 1, 1]))
-    Item.create(embedding: Pgvector.encode([2, 2, 2]))
-    Item.create(embedding: Pgvector.encode([1, 1, 2]))
+    Item.create(embedding: [1, 1, 1])
+    Item.create(embedding: [2, 2, 2])
+    Item.create(embedding: [1, 1, 2])
 
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
     assert_equal ["[1,1,1]", "[1,1,2]", "[2,2,2]"], results.map(&:embedding)

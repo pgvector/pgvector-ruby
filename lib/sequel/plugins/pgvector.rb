@@ -52,6 +52,14 @@ module Sequel
             .nearest_neighbors(column, self[column], **options)
             .exclude(primary_key => self[primary_key])
         end
+
+        def []=(k, v)
+          if self.class.vector_columns.key?(k) && !v.is_a?(String)
+            super(k, ::Pgvector.encode(v))
+          else
+            super
+          end
+        end
       end
     end
   end
