@@ -19,7 +19,7 @@ gem "pgvector"
 And follow the instructions for your database library:
 
 - [pg](#pg)
-- [Sequel](#sequel) [unreleased]
+- [Sequel](#sequel)
 
 Or check out some examples:
 
