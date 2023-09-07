@@ -8,12 +8,10 @@ module Sequel
         end
       end
 
-      module ClassMethods
-        attr_accessor :vector_columns
-
+      module DatasetMethods
         def nearest_neighbors(column, value, distance:)
           value = ::Pgvector.encode(value) unless value.is_a?(String)
-          quoted_column = dataset.quote_identifier(column)
+          quoted_column = quote_identifier(column)
           distance = distance.to_s
 
           operator =
@@ -37,10 +35,18 @@ module Sequel
               order
             end
 
-          select_append(Sequel.lit("#{neighbor_distance} AS neighbor_distance", value))
-            .exclude(column => nil)
-            .order(Sequel.lit(order, value))
+          select_append(Sequel.lit("#{neighbor_distance} AS neighbor_distance", value)).exclude(column => nil).order(Sequel.lit(order, value))
         end
+
+        def vector_columns
+          self.class.vector_columns
+        end
+      end
+
+      module ClassMethods
+        attr_accessor :vector_columns
+
+        Sequel::Plugins.def_dataset_methods(self, :nearest_neighbors)
 
         Plugins.inherited_instance_variables(self, :@vector_columns => :dup)
       end
@@ -51,9 +57,7 @@ module Sequel
           # important! check if neighbor attribute before calling send
           raise ArgumentError, "Invalid column" unless self.class.vector_columns[column]
 
-          self.class
-            .nearest_neighbors(column, self[column], **options)
-            .exclude(primary_key => self[primary_key])
+          self.class.nearest_neighbors(column, self[column], **options).exclude(primary_key => self[primary_key])
         end
 
         def []=(k, v)
