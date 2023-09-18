@@ -29,6 +29,12 @@ Or check out some examples:
 
 ## pg
 
+Enable the extension
+
+```ruby
+conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
+```
+
 Register the vector type with your connection
 
 ```ruby
@@ -51,6 +57,12 @@ conn.exec_params("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [embed
 ```
 
 ## Sequel
+
+Enable the extension
+
+```ruby
+DB.run("CREATE EXTENSION IF NOT EXISTS vector")
+```
 
 Create a table
 
