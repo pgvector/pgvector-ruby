@@ -35,7 +35,9 @@ module Sequel
               order
             end
 
-          select_append(Sequel.lit("#{neighbor_distance} AS neighbor_distance", value)).exclude(column => nil).order(Sequel.lit(order, value))
+          select_append(Sequel.lit("#{neighbor_distance} AS neighbor_distance", value))
+            .exclude(column => nil)
+            .order(Sequel.lit(order, value))
         end
 
         def vector_columns
@@ -57,7 +59,9 @@ module Sequel
           # important! check if neighbor attribute before calling send
           raise ArgumentError, "Invalid column" unless self.class.vector_columns[column]
 
-          self.class.nearest_neighbors(column, self[column], **options).exclude(primary_key => self[primary_key])
+          self.class
+            .nearest_neighbors(column, self[column], **options)
+            .exclude(primary_key => self[primary_key])
         end
 
         def []=(k, v)
