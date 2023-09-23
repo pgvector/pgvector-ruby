@@ -39,10 +39,6 @@ module Sequel
             .exclude(column => nil)
             .order(Sequel.lit(order, value))
         end
-
-        def vector_columns
-          self.class.vector_columns
-        end
       end
 
       module ClassMethods
