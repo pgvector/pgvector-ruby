@@ -8,12 +8,10 @@ module Sequel
         end
       end
 
-      module ClassMethods
-        attr_accessor :vector_columns
-
+      module DatasetMethods
         def nearest_neighbors(column, value, distance:)
           value = ::Pgvector.encode(value) unless value.is_a?(String)
-          quoted_column = dataset.quote_identifier(column)
+          quoted_column = quote_identifier(column)
           distance = distance.to_s
 
           operator =
@@ -41,6 +39,16 @@ module Sequel
             .exclude(column => nil)
             .order(Sequel.lit(order, value))
         end
+
+        def vector_columns
+          self.class.vector_columns
+        end
+      end
+
+      module ClassMethods
+        attr_accessor :vector_columns
+
+        Sequel::Plugins.def_dataset_methods(self, :nearest_neighbors)
 
         Plugins.inherited_instance_variables(self, :@vector_columns => :dup)
       end
