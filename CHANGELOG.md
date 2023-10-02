@@ -1,3 +1,7 @@
+## 0.2.2 (unreleased)
+
+- Added `nearest_neighbors` method to datasets with Sequel
+
 ## 0.2.1 (2023-06-04)
 
 - Added support for Sequel
