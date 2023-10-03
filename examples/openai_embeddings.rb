@@ -1,22 +1,17 @@
 require "json"
 require "net/http"
+require "pg"
 require "pgvector"
-require "sequel"
 
-DB = Sequel.connect("postgres://localhost/pgvector_example")
+conn = PG.connect(dbname: "pgvector_example")
+conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
 
-DB.run "CREATE EXTENSION IF NOT EXISTS vector"
+registry = PG::BasicTypeRegistry.new.define_default_types
+Pgvector::PG.register_vector(registry)
+conn.type_map_for_results = PG::BasicTypeMapForResults.new(conn, registry: registry)
 
-DB.drop_table? :articles
-DB.create_table :articles do
-  primary_key :id
-  text :content
-  column :embedding, "vector(1536)"
-end
-
-class Article < Sequel::Model
-  plugin :pgvector, :embedding
-end
+conn.exec("DROP TABLE IF EXISTS documents")
+conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(1536))")
 
 # https://platform.openai.com/docs/guides/embeddings/how-to-get-embeddings
 # input can be an array with 2048 elements
@@ -42,12 +37,12 @@ input = [
 ]
 embeddings = fetch_embeddings(input)
 
-articles = []
 input.zip(embeddings) do |content, embedding|
-  articles << {content: content, embedding: Pgvector.encode(embedding)}
+  conn.exec_params("INSERT INTO documents (content, embedding) VALUES ($1, $2)", [content, embedding])
 end
-Article.multi_insert(articles)
 
-article = Article.first
-# use inner product for performance since embeddings are normalized
-pp article.nearest_neighbors(:embedding, distance: "inner_product").limit(5).map(&:content)
+document_id = 1
+result = conn.exec_params("SELECT content FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5", [document_id])
+result.each do |row|
+  puts row["content"]
+end
