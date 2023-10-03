@@ -31,7 +31,7 @@ class PgTest < Minitest::Test
         conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
       end
       conn.exec("DROP TABLE IF EXISTS pg_items")
-      conn.exec("CREATE TABLE pg_items (id bigserial primary key, embedding vector(3))")
+      conn.exec("CREATE TABLE pg_items (id bigserial PRIMARY KEY, embedding vector(3))")
 
       registry = PG::BasicTypeRegistry.new.define_default_types
       Pgvector::PG.register_vector(registry)
