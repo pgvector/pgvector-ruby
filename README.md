@@ -35,7 +35,7 @@ Enable the extension
 conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
 ```
 
-Register the vector type with your connection
+Optionally enable type casting for results
 
 ```ruby
 registry = PG::BasicTypeRegistry.new.define_default_types

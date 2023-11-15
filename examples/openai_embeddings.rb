@@ -6,10 +6,6 @@ require "pgvector"
 conn = PG.connect(dbname: "pgvector_example")
 conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
 
-registry = PG::BasicTypeRegistry.new.define_default_types
-Pgvector::PG.register_vector(registry)
-conn.type_map_for_results = PG::BasicTypeMapForResults.new(conn, registry: registry)
-
 conn.exec("DROP TABLE IF EXISTS documents")
 conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(1536))")
 
