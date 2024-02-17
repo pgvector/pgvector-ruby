@@ -6,7 +6,7 @@ Supports [pg](https://github.com/ged/ruby-pg) and [Sequel](https://github.com/je
 
 For Rails, check out [Neighbor](https://github.com/ankane/neighbor)
 
-[![Build Status](https://github.com/pgvector/pgvector-ruby/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-ruby/actions)
+[![Build Status](https://github.com/pgvector/pgvector-ruby/actions/workflows/build.yml/badge.svg)](https://github.com/pgvector/pgvector-ruby/actions)
 
 ## Installation
 
