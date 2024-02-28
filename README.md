@@ -43,6 +43,12 @@ Pgvector::PG.register_vector(registry)
 conn.type_map_for_results = PG::BasicTypeMapForResults.new(conn, registry: registry)
 ```
 
+Create a table
+
+```ruby
+conn.exec("CREATE TABLE items (id bigserial PRIMARY KEY, embedding vector(3))")
+```
+
 Insert a vector
 
 ```ruby
@@ -55,6 +61,16 @@ Get the nearest neighbors to a vector
 ```ruby
 conn.exec_params("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [embedding]).to_a
 ```
+
+Add an approximate index
+
+```ruby
+conn.exec("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)")
+# or
+conn.exec("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)")
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## Sequel
 
@@ -100,6 +116,14 @@ Get the nearest neighbors to a vector
 ```ruby
 Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
 ```
+
+Add an approximate index
+
+```ruby
+DB.add_index :items, :embedding, type: "hnsw", opclass: "vector_l2_ops"
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## History
 

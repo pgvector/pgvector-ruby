@@ -9,6 +9,7 @@ DB.create_table :sequel_items do
   primary_key :id
   column :embedding, "vector(3)"
 end
+DB.add_index :sequel_items, :embedding, type: "hnsw", opclass: "vector_l2_ops"
 
 class Item < Sequel::Model(DB[:sequel_items])
   plugin :pgvector, :embedding
