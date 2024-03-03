@@ -23,7 +23,7 @@ conn.copy_data("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)", coder) 
     # show progress
     putc "." if i % 10000 == 0
 
-    conn.put_copy_data([[embedding.shape[0], 0].pack("s>s>") + embedding.to_network.to_binary])
+    conn.put_copy_data([[embedding.shape[0], 0].pack("s>s>") + embedding.cast_to(Numo::SFloat).to_network.to_binary])
   end
 end
 
