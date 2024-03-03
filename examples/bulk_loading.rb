@@ -16,17 +16,14 @@ conn.exec("DROP TABLE IF EXISTS items")
 conn.exec("CREATE TABLE items (id bigserial, embedding vector(#{dimensions}))")
 
 # load data in batches
-batches = 100
-puts "Loading #{embeddings.shape[0]} rows over #{batches} batches"
-embeddings.split(batches).each do |batch|
-  # show progress
-  putc "."
+puts "Loading #{embeddings.shape[0]} rows"
+coder = PG::BinaryEncoder::CopyRow.new
+conn.copy_data("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)", coder) do
+  embeddings.each_over_axis.with_index do |embedding, i|
+    # show progress
+    putc "." if i % 10000 == 0
 
-  coder = PG::BinaryEncoder::CopyRow.new
-  conn.copy_data("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)", coder) do
-    batch.each_over_axis do |embedding|
-      conn.put_copy_data([[embedding.shape[0], 0].pack("s>s>") + embedding.to_network.to_binary])
-    end
+    conn.put_copy_data([[embedding.shape[0], 0].pack("s>s>") + embedding.to_network.to_binary])
   end
 end
 
