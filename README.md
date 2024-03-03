@@ -26,6 +26,7 @@ Or check out some examples:
 - [Embeddings](examples/openai_embeddings.rb) with OpenAI
 - [User-based recommendations](examples/disco_user_recs.rb) with Disco
 - [Item-based recommendations](examples/disco_item_recs.rb) with Disco
+- [Bulk loading](examples/bulk_loading.rb) with `COPY`
 
 ## pg
 
