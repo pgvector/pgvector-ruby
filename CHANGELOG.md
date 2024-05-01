@@ -1,3 +1,7 @@
+## 0.2.3 (unreleased)
+
+- Added `taxicab` distance for Sequel
+
 ## 0.2.2 (2023-10-03)
 
 - Added `nearest_neighbors` method to datasets with Sequel

@@ -22,6 +22,8 @@ module Sequel
               "<=>"
             when "euclidean"
               "<->"
+            when "taxicab"
+              "<+>"
             end
 
           raise ArgumentError, "Invalid distance: #{distance}" unless operator
