@@ -18,6 +18,8 @@ class Item < Sequel::Model(DB[:sequel_items])
   plugin :pgvector, :embedding
 end
 
+Item.unrestrict_primary_key
+
 class TestSequel < Minitest::Test
   def setup
     items.delete
@@ -31,20 +33,33 @@ class TestSequel < Minitest::Test
   end
 
   def test_model
-    Item.create(embedding: [1, 1, 1])
-    Item.create(embedding: [2, 2, 2])
-    Item.create(embedding: [1, 1, 2])
+    Item.create(id: 1, embedding: [1, 1, 1])
+    Item.create(id: 2, embedding: [2, 2, 2])
+    Item.create(id: 3, embedding: [1, 1, 2])
 
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
-    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:embedding)
+    assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
+    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:embedding)
+
+    results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "inner_product").limit(5)
+    assert_equal [2, 3, 1], results.map(&:id)
+    assert_equal [6, 4, 3], results.map { |r| r[:neighbor_distance] }
+
+    results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "taxicab").limit(5)
+    assert_equal [1, 3, 2], results.map(&:id)
+    assert_equal [0, 1, 3], results.map { |r| r[:neighbor_distance] }
 
     results = Item.first.nearest_neighbors(:embedding, distance: "euclidean").limit(5)
-    assert_equal [[1, 1, 2], [2, 2, 2]], results.map(&:embedding)
+    assert_equal [3, 2], results.map(&:id)
     assert_equal [1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
 
+    results = Item.first.nearest_neighbors(:embedding, distance: "inner_product").limit(5)
+    assert_equal [2, 3], results.map(&:id)
+    assert_equal [6, 4], results.map { |r| r[:neighbor_distance] }
+
     results = Item.first.nearest_neighbors(:embedding, distance: "taxicab").limit(5)
-    assert_equal [[1, 1, 2], [2, 2, 2]], results.map(&:embedding)
+    assert_equal [3, 2], results.map(&:id)
     assert_equal [1, 3], results.map { |r| r[:neighbor_distance] }
 
     sampled_item = Item.order(Sequel.function(:random)).first
