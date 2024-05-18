@@ -20,6 +20,18 @@ module Pgvector
       SparseVector.new(dimensions, indices, values)
     end
 
+    def self.from_string(string)
+      elements, dimensions = string.split("/", 2)
+      indices = []
+      values = []
+      elements[1..-2].split(",").each do |e|
+        index, value = e.split(":", 2)
+        indices << index.to_i - 1
+        values << value.to_f
+      end
+      SparseVector.new(dimensions.to_i, indices, values)
+    end
+
     def to_s
       "{#{@indices.zip(@values).map { |i, v| "#{i.to_i + 1}:#{v.to_f}" }.join(",")}}/#{@dimensions.to_i}"
     end

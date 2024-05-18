@@ -48,15 +48,7 @@ module Pgvector
 
       class Sparsevec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          elements, dimensions = string.split("/", 2)
-          indices = []
-          values = []
-          elements[1..-2].split(",").each do |e|
-            index, value = e.split(":", 2)
-            indices << index.to_i - 1
-            values << value.to_f
-          end
-          SparseVector.new(dimensions.to_i, indices, values)
+          SparseVector.from_string(string)
         end
       end
     end
