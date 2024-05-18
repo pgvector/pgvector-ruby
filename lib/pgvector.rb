@@ -22,4 +22,10 @@ module Pgvector
       string
     end
   end
+
+  def self.decode_binary(string)
+    dim, unused = string[0, 4].unpack("nn")
+    raise "expected unused to be 0" if unused != 0
+    string[4..-1].unpack("g#{dim}")
+  end
 end

@@ -16,9 +16,7 @@ module Pgvector
     module BinaryDecoder
       class Vector < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          dim, unused = string[0, 4].unpack("nn")
-          raise "expected unused to be 0" if unused != 0
-          string[4..-1].unpack("g#{dim}")
+          Pgvector.decode_binary(string)
         end
       end
 
