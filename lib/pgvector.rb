@@ -15,7 +15,7 @@ module Pgvector
 
   def self.decode(string)
     if string[0] == "["
-      string[1..-2].split(",").map(&:to_f)
+      Vector.from_string(string)
     elsif string[0] == "{"
       SparseVector.from_string(string)
     else
@@ -23,9 +23,21 @@ module Pgvector
     end
   end
 
-  def self.decode_binary(string)
-    dim, unused = string[0, 4].unpack("nn")
-    raise "expected unused to be 0" if unused != 0
-    string[4..-1].unpack("g#{dim}")
+  class Vector
+    def self.from_string(string)
+      string[1..-2].split(",").map(&:to_f)
+    end
+
+    def self.from_binary(string)
+      dim, unused = string[0, 4].unpack("nn")
+      raise "expected unused to be 0" if unused != 0
+      string[4..-1].unpack("g#{dim}")
+    end
+  end
+
+  class HalfVector
+    def self.from_string(string)
+      string[1..-2].split(",").map(&:to_f)
+    end
   end
 end

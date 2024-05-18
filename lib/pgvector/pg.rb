@@ -16,7 +16,7 @@ module Pgvector
     module BinaryDecoder
       class Vector < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          Pgvector.decode_binary(string)
+          ::Pgvector::Vector.from_binary(string)
         end
       end
 
@@ -30,13 +30,13 @@ module Pgvector
     module TextDecoder
       class Vector < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          Pgvector.decode(string)
+          ::Pgvector::Vector.from_string(string)
         end
       end
 
       class Halfvec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          Pgvector.decode(string)
+          HalfVector.from_string(string)
         end
       end
 
