@@ -8,6 +8,9 @@ DB.drop_table? :sequel_items
 DB.create_table :sequel_items do
   primary_key :id
   column :embedding, "vector(3)"
+  column :half_embedding, "halfvec(3)"
+  column :binary_embedding, "bit(3)"
+  column :sparse_embedding, "sparsevec(3)"
 end
 DB.add_index :sequel_items, :embedding, type: "hnsw", opclass: "vector_l2_ops"
 
