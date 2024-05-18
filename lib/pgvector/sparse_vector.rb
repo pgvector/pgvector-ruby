@@ -32,6 +32,14 @@ module Pgvector
       SparseVector.new(dimensions.to_i, indices, values)
     end
 
+    def self.from_binary(string)
+      dim, nnz, unused = string[0, 12].unpack("l>l>l>")
+      raise "expected unused to be 0" if unused != 0
+      indices = string[12, nnz * 4].unpack("l>#{nnz}")
+      values = string[(12 + nnz * 4)..-1].unpack("g#{nnz}")
+      SparseVector.new(dim, indices, values)
+    end
+
     def to_s
       "{#{@indices.zip(@values).map { |i, v| "#{i.to_i + 1}:#{v.to_f}" }.join(",")}}/#{@dimensions.to_i}"
     end

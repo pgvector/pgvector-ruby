@@ -24,11 +24,7 @@ module Pgvector
 
       class Sparsevec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          dim, nnz, unused = string[0, 12].unpack("l>l>l>")
-          raise "expected unused to be 0" if unused != 0
-          indices = string[12, nnz * 4].unpack("l>#{nnz}")
-          values = string[(12 + nnz * 4)..-1].unpack("g#{nnz}")
-          SparseVector.new(dim, indices, values)
+          SparseVector.from_binary(string)
         end
       end
     end
