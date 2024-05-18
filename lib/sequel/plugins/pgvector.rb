@@ -24,6 +24,10 @@ module Sequel
               "<->"
             when "taxicab"
               "<+>"
+            when "hamming"
+              "<~>"
+            when "jaccard"
+              "<%>"
             end
 
           raise ArgumentError, "Invalid distance: #{distance}" unless operator

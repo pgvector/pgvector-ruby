@@ -1,7 +1,7 @@
 ## 0.2.3 (unreleased)
 
 - Added support for `halfvec` and `sparsevec` types
-- Added `taxicab` distance for Sequel
+- Added `taxicab`, `hamming`, and `jaccard` distances for Sequel
 
 ## 0.2.2 (2023-10-03)
 

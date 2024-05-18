@@ -10,6 +10,10 @@ module Pgvector
   end
 
   def self.decode(string)
-    string[1..-2].split(",").map(&:to_f)
+    if string[0] == "["
+      string[1..-2].split(",").map(&:to_f)
+    else
+      string
+    end
   end
 end

@@ -15,7 +15,7 @@ end
 DB.add_index :sequel_items, :embedding, type: "hnsw", opclass: "vector_l2_ops"
 
 class Item < Sequel::Model(DB[:sequel_items])
-  plugin :pgvector, :embedding, :half_embedding
+  plugin :pgvector, :embedding, :half_embedding, :binary_embedding
 end
 
 Item.unrestrict_primary_key
@@ -33,9 +33,9 @@ class TestSequel < Minitest::Test
   end
 
   def test_model
-    Item.create(id: 1, embedding: [1, 1, 1], half_embedding: [1, 1, 1])
-    Item.create(id: 2, embedding: [2, 2, 2], half_embedding: [2, 2, 2])
-    Item.create(id: 3, embedding: [1, 1, 2], half_embedding: [1, 1, 2])
+    Item.create(id: 1, embedding: [1, 1, 1], half_embedding: [1, 1, 1], binary_embedding: "000")
+    Item.create(id: 2, embedding: [2, 2, 2], half_embedding: [2, 2, 2], binary_embedding: "101")
+    Item.create(id: 3, embedding: [1, 1, 2], half_embedding: [1, 1, 2], binary_embedding: "111")
 
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
@@ -66,6 +66,11 @@ class TestSequel < Minitest::Test
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:half_embedding)
+
+    results = Item.nearest_neighbors(:binary_embedding, "101", distance: "hamming").limit(5)
+    assert_equal [2, 3, 1], results.map(&:id)
+    assert_equal [0, 1, 2], results.map { |r| r[:neighbor_distance] }
+    assert_equal ["101", "111", "000"], results.map(&:binary_embedding)
 
     sampled_item = Item.order(Sequel.function(:random)).first
     results = Item.where(id: sampled_item.id).nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(1)
