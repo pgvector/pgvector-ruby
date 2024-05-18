@@ -1,4 +1,5 @@
 # modules
+require_relative "pgvector/sparse_vector"
 require_relative "pgvector/version"
 
 module Pgvector
