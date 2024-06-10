@@ -12,7 +12,7 @@ module Pgvector
       elements = data.to_a.sort
       indices = elements.map { |v| v[0].to_i }
       values = elements.map { |v| v[1].to_f }
-      SparseVector.new(dimensions, indices, values)
+      new(dimensions, indices, values)
     end
 
     def self.from_dense(arr)
@@ -26,7 +26,7 @@ module Pgvector
           values << v.to_f
         end
       end
-      SparseVector.new(dimensions, indices, values)
+      new(dimensions, indices, values)
     end
 
     def self.from_string(string)
@@ -38,7 +38,7 @@ module Pgvector
         indices << index.to_i - 1
         values << value.to_f
       end
-      SparseVector.new(dimensions.to_i, indices, values)
+      new(dimensions.to_i, indices, values)
     end
 
     def self.from_binary(string)
@@ -46,7 +46,7 @@ module Pgvector
       raise "expected unused to be 0" if unused != 0
       indices = string[12, nnz * 4].unpack("l>#{nnz}")
       values = string[(12 + nnz * 4)..-1].unpack("g#{nnz}")
-      SparseVector.new(dim, indices, values)
+      new(dim, indices, values)
     end
 
     def to_h
