@@ -1,9 +1,18 @@
 module Pgvector
   class SparseVector
+    attr_reader :dimensions
+
     def initialize(dimensions, indices, values)
       @dimensions = dimensions.to_i
       @indices = indices.map(&:to_i)
       @values = values.map(&:to_f)
+    end
+
+    def self.from_hash(data, dimensions)
+      elements = data.to_a.sort
+      indices = elements.map { |v| v[0].to_i }
+      values = elements.map { |v| v[1].to_f }
+      SparseVector.new(dimensions, indices, values)
     end
 
     def self.from_dense(arr)
@@ -38,6 +47,10 @@ module Pgvector
       indices = string[12, nnz * 4].unpack("l>#{nnz}")
       values = string[(12 + nnz * 4)..-1].unpack("g#{nnz}")
       SparseVector.new(dim, indices, values)
+    end
+
+    def to_h
+      @indices.zip(@values).to_h
     end
 
     def to_s
