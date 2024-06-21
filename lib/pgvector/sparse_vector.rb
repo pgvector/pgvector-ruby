@@ -1,6 +1,6 @@
 module Pgvector
   class SparseVector
-    attr_reader :dimensions
+    attr_reader :dimensions, :indices, :values
 
     def initialize(dimensions, indices, values)
       @dimensions = dimensions.to_i
@@ -47,10 +47,6 @@ module Pgvector
       indices = string[12, nnz * 4].unpack("l>#{nnz}")
       values = string[(12 + nnz * 4)..-1].unpack("g#{nnz}")
       new(dim, indices, values)
-    end
-
-    def to_h
-      @indices.zip(@values).to_h
     end
 
     def to_s

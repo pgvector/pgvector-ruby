@@ -16,10 +16,11 @@ class SparseVectorTest < Minitest::Test
     assert_equal [1, 0, 2, 0, 3, 0], vec.to_a
   end
 
-  def test_to_h
+  def test_accessors
     vec = Pgvector::SparseVector.from_dense([1, 0, 2, 0, 3, 0])
-    assert_equal ({0 => 1, 2 => 2, 4 => 3}), vec.to_h
     assert_equal 6, vec.dimensions
+    assert_equal [0, 2, 4], vec.indices
+    assert_equal [1, 2, 3], vec.values
   end
 
   def test_to_s
