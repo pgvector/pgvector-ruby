@@ -9,7 +9,7 @@ module Pgvector
     end
 
     def self.from_hash(data, dimensions)
-      elements = data.to_a.sort
+      elements = data.select { |_, v| v != 0 }.sort
       indices = elements.map { |v| v[0].to_i }
       values = elements.map { |v| v[1].to_f }
       new(dimensions, indices, values)

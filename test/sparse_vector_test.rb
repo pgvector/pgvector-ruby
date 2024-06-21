@@ -2,8 +2,9 @@ require_relative "test_helper"
 
 class SparseVectorTest < Minitest::Test
   def test_from_hash
-    vec = Pgvector::SparseVector.from_hash({0 => 1, 2 => 2, 4 => 3}, 6)
+    vec = Pgvector::SparseVector.from_hash({2 => 2, 4 => 3, 0 => 1, 3 => 0}, 6)
     assert_equal [1, 0, 2, 0, 3, 0], vec.to_a
+    assert_equal [0, 2, 4], vec.indices
   end
 
   def test_from_dense
