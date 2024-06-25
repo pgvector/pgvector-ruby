@@ -18,7 +18,7 @@ module Pgvector
     end
 
     def to_a
-      result = Array.new(dimensions) { 0.0 }
+      result = Array.new(dimensions, 0.0)
       @indices.zip(@values) do |i, v|
         result[i] = v
       end
