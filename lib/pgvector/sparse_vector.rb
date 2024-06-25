@@ -32,7 +32,7 @@ module Pgvector
         raise ArgumentError, "dimensions required"
       end
       elements = data.select { |_, v| v != 0 }.sort
-      @dimensions = dimensions
+      @dimensions = dimensions.to_i
       @indices = elements.map { |v| v[0].to_i }
       @values = elements.map { |v| v[1].to_f }
     end
