@@ -51,7 +51,7 @@ module Pgvector
     end
 
     class << self
-      def from_string(string)
+      def from_text(string)
         elements, dimensions = string.split("/", 2)
         indices = []
         values = []

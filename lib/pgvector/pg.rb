@@ -30,19 +30,19 @@ module Pgvector
     module TextDecoder
       class Vector < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          ::Pgvector::Vector.from_string(string).to_a
+          ::Pgvector::Vector.from_text(string).to_a
         end
       end
 
       class Halfvec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          HalfVector.from_string(string).to_a
+          HalfVector.from_text(string).to_a
         end
       end
 
       class Sparsevec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          SparseVector.from_string(string)
+          SparseVector.from_text(string)
         end
       end
     end

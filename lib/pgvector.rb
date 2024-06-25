@@ -17,9 +17,9 @@ module Pgvector
 
   def self.decode(string)
     if string[0] == "["
-      Vector.from_string(string).to_a
+      Vector.from_text(string).to_a
     elsif string[0] == "{"
-      SparseVector.from_string(string)
+      SparseVector.from_text(string)
     else
       string
     end

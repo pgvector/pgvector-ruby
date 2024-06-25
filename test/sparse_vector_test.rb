@@ -26,8 +26,8 @@ class SparseVectorTest < Minitest::Test
     assert_equal "dimensions not allowed", error.message
   end
 
-  def test_from_string
-    vec = Pgvector::SparseVector.from_string("{1:1,3:2,5:3}/6")
+  def test_from_text
+    vec = Pgvector::SparseVector.from_text("{1:1,3:2,5:3}/6")
     assert_equal [1, 0, 2, 0, 3, 0], vec.to_a
   end
 

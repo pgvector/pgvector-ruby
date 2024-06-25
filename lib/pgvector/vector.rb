@@ -4,7 +4,7 @@ module Pgvector
       @data = data.to_a.map(&:to_f)
     end
 
-    def self.from_string(string)
+    def self.from_text(string)
       Vector.new(string[1..-2].split(",").map(&:to_f))
     end
 
