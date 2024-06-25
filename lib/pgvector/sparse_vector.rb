@@ -2,11 +2,16 @@ module Pgvector
   class SparseVector
     attr_reader :dimensions, :indices, :values
 
-    def initialize(value, dimensions = nil)
+    NO_DEFAULT = Object.new
+
+    def initialize(value, dimensions = NO_DEFAULT)
       if value.is_a?(Hash)
+        if dimensions == NO_DEFAULT
+          raise ArgumentError, "dimensions required"
+        end
         from_hash(value, dimensions)
       else
-        unless dimensions.nil?
+        unless dimensions == NO_DEFAULT
           raise ArgumentError, "dimensions not allowed"
         end
         from_array(value)
@@ -28,9 +33,6 @@ module Pgvector
     private
 
     def from_hash(data, dimensions)
-      if dimensions.nil?
-        raise ArgumentError, "dimensions required"
-      end
       elements = data.select { |_, v| v != 0 }.sort
       @dimensions = dimensions.to_i
       @indices = elements.map { |v| v[0].to_i }
