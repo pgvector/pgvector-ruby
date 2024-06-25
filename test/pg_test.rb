@@ -33,7 +33,7 @@ class PgTest < Minitest::Test
   end
 
   def test_sparsevec_text
-    embedding = Pgvector::SparseVector.from_dense([1.5, 2, 3])
+    embedding = Pgvector::SparseVector.new([1.5, 2, 3])
     conn.exec_params("INSERT INTO pg_items (sparse_embedding) VALUES ($1), (NULL)", [embedding])
 
     res = conn.exec("SELECT * FROM pg_items ORDER BY id").to_a
@@ -42,7 +42,7 @@ class PgTest < Minitest::Test
   end
 
   def test_sparsevec_binary
-    embedding = Pgvector::SparseVector.from_dense([1.5, 2, 3])
+    embedding = Pgvector::SparseVector.new([1.5, 2, 3])
     conn.exec_params("INSERT INTO pg_items (sparse_embedding) VALUES ($1), (NULL)", [embedding])
 
     res = conn.exec_params("SELECT * FROM pg_items ORDER BY id", [], 1).to_a

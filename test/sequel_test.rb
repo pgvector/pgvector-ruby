@@ -33,9 +33,9 @@ class TestSequel < Minitest::Test
   end
 
   def test_model
-    Item.create(id: 1, embedding: [1, 1, 1], half_embedding: [1, 1, 1], binary_embedding: "000", sparse_embedding: Pgvector::SparseVector.from_dense([1, 1, 1]))
-    Item.create(id: 2, embedding: [2, 2, 2], half_embedding: [2, 2, 2], binary_embedding: "101", sparse_embedding: Pgvector::SparseVector.from_dense([2, 2, 2]))
-    Item.create(id: 3, embedding: [1, 1, 2], half_embedding: [1, 1, 2], binary_embedding: "111", sparse_embedding: Pgvector::SparseVector.from_dense([1, 1, 2]))
+    Item.create(id: 1, embedding: [1, 1, 1], half_embedding: [1, 1, 1], binary_embedding: "000", sparse_embedding: Pgvector::SparseVector.new([1, 1, 1]))
+    Item.create(id: 2, embedding: [2, 2, 2], half_embedding: [2, 2, 2], binary_embedding: "101", sparse_embedding: Pgvector::SparseVector.new([2, 2, 2]))
+    Item.create(id: 3, embedding: [1, 1, 2], half_embedding: [1, 1, 2], binary_embedding: "111", sparse_embedding: Pgvector::SparseVector.new([1, 1, 2]))
 
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
@@ -72,7 +72,7 @@ class TestSequel < Minitest::Test
     assert_equal [0, 1, 2], results.map { |r| r[:neighbor_distance] }
     assert_equal ["101", "111", "000"], results.map(&:binary_embedding)
 
-    results = Item.nearest_neighbors(:sparse_embedding, Pgvector::SparseVector.from_dense([1, 1, 1]), distance: "euclidean").limit(5)
+    results = Item.nearest_neighbors(:sparse_embedding, Pgvector::SparseVector.new([1, 1, 1]), distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:sparse_embedding).map(&:to_a)
