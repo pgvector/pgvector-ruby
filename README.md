@@ -110,7 +110,7 @@ Get the nearest neighbors to a record
 item.nearest_neighbors(:embedding, distance: "euclidean").limit(5)
 ```
 
-Also supports `inner_product` and `cosine` distance
+Also supports `inner_product`, `cosine`, `taxicab`, `hamming`, and `jaccard` distance
 
 Get the nearest neighbors to a vector
 
