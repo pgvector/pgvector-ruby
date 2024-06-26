@@ -23,11 +23,11 @@ module Pgvector
     end
 
     def to_a
-      result = Array.new(dimensions, 0.0)
+      arr = Array.new(dimensions, 0.0)
       @indices.zip(@values) do |i, v|
-        result[i] = v
+        arr[i] = v
       end
-      result
+      arr
     end
 
     private
