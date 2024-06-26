@@ -7,12 +7,12 @@ module Pgvector
     def initialize(value, dimensions = NO_DEFAULT)
       if value.is_a?(Hash)
         if dimensions == NO_DEFAULT
-          raise ArgumentError, "dimensions required"
+          raise ArgumentError, "missing dimensions"
         end
         from_hash(value, dimensions)
       else
         unless dimensions == NO_DEFAULT
-          raise ArgumentError, "dimensions not allowed"
+          raise ArgumentError, "extra argument"
         end
         from_array(value)
       end

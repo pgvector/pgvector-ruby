@@ -11,7 +11,7 @@ class SparseVectorTest < Minitest::Test
     error = assert_raises(ArgumentError) do
       Pgvector::SparseVector.new({0 => 1, 2 => 2, 4 => 3})
     end
-    assert_equal "dimensions required", error.message
+    assert_equal "missing dimensions", error.message
   end
 
   def test_array
@@ -23,7 +23,7 @@ class SparseVectorTest < Minitest::Test
     error = assert_raises(ArgumentError) do
       Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0], 6)
     end
-    assert_equal "dimensions not allowed", error.message
+    assert_equal "extra argument", error.message
   end
 
   def test_from_text
