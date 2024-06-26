@@ -1,7 +1,8 @@
-## 0.2.3 (unreleased)
+## 0.3.0 (unreleased)
 
 - Added support for `halfvec` and `sparsevec` types
 - Added `taxicab`, `hamming`, and `jaccard` distances for Sequel
+- Dropped support for Ruby < 3.1
 
 ## 0.2.2 (2023-10-03)
 
