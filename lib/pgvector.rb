@@ -8,7 +8,7 @@ module Pgvector
   autoload :PG, "pgvector/pg"
 
   def self.encode(data)
-    if data.is_a?(SparseVector)
+    if data.is_a?(Vector) || data.is_a?(HalfVector) || data.is_a?(SparseVector)
       data.to_s
     else
       Vector.new(data).to_s
