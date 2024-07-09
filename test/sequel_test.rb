@@ -2,6 +2,10 @@ require_relative "test_helper"
 
 DB = Sequel.connect("postgres://localhost/pgvector_ruby_test")
 
+if ENV["VERBOSE"]
+  DB.loggers << Logger.new($stdout, formatter: ->(_, _, _, msg) { "#{msg}\n" })
+end
+
 DB.run("CREATE EXTENSION IF NOT EXISTS vector")
 
 DB.drop_table? :sequel_items
