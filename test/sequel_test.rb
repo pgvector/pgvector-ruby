@@ -106,6 +106,13 @@ class TestSequel < Minitest::Test
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:half_embedding)
   end
 
+  def test_instance_halfvec_euclidean
+    create_items
+    results = Item.first.nearest_neighbors(:half_embedding, distance: "euclidean").limit(5)
+    assert_equal [3, 2], results.map(&:id)
+    assert_equal [1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
+  end
+
   def test_model_bit_hamming
     create_items
     results = Item.nearest_neighbors(:binary_embedding, "101", distance: "hamming").limit(5)
@@ -121,12 +128,26 @@ class TestSequel < Minitest::Test
     assert_equal ["101", "111", "000"], results.map(&:binary_embedding)
   end
 
+  def test_instance_bit_hamming
+    create_items
+    results = Item.first.nearest_neighbors(:binary_embedding, distance: "hamming").limit(5)
+    assert_equal [2, 3], results.map(&:id)
+    assert_equal [2, 3], results.map { |r| r[:neighbor_distance] }
+  end
+
   def test_model_sparsevec_euclidean
     create_items
     results = Item.nearest_neighbors(:sparse_embedding, Pgvector::SparseVector.new([1, 1, 1]), distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:sparse_embedding).map(&:to_a)
+  end
+
+  def test_instance_sparsevec_euclidean
+    create_items
+    results = Item.first.nearest_neighbors(:sparse_embedding, distance: "euclidean").limit(5)
+    assert_equal [3, 2], results.map(&:id)
+    assert_equal [1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
   end
 
   def test_model_dataset
