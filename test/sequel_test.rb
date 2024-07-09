@@ -58,6 +58,12 @@ class TestSequel < Minitest::Test
     assert_equal [6, 4, 3], results.map { |r| r[:neighbor_distance] }
   end
 
+  def test_model_vector_cosine
+    create_items
+    results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "cosine").limit(5)
+    assert_equal [1, 2, 3], results.map(&:id)
+  end
+
   def test_model_vector_taxicab
     create_items
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "taxicab").limit(5)
@@ -77,6 +83,12 @@ class TestSequel < Minitest::Test
     results = Item.first.nearest_neighbors(:embedding, distance: "inner_product").limit(5)
     assert_equal [2, 3], results.map(&:id)
     assert_equal [6, 4], results.map { |r| r[:neighbor_distance] }
+  end
+
+  def test_instance_vector_cosine
+    create_items
+    results = Item.first.nearest_neighbors(:embedding, distance: "cosine").limit(5)
+    assert_equal [2, 3], results.map(&:id)
   end
 
   def test_instance_vector_taxicab
@@ -99,6 +111,13 @@ class TestSequel < Minitest::Test
     results = Item.nearest_neighbors(:binary_embedding, "101", distance: "hamming").limit(5)
     assert_equal [2, 3, 1], results.map(&:id)
     assert_equal [0, 1, 2], results.map { |r| r[:neighbor_distance] }
+    assert_equal ["101", "111", "000"], results.map(&:binary_embedding)
+  end
+
+  def test_model_bit_jaccard
+    create_items
+    results = Item.nearest_neighbors(:binary_embedding, "101", distance: "jaccard").limit(5)
+    assert_equal [2, 3, 1], results.map(&:id)
     assert_equal ["101", "111", "000"], results.map(&:binary_embedding)
   end
 
