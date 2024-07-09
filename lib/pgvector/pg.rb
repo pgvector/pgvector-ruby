@@ -25,8 +25,7 @@ module Pgvector
 
       class Bit < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          length = string[..3].unpack1("l>")
-          string[4..].unpack("B*").join[...length]
+          ::Pgvector::Bit.from_binary(string).to_s
         end
       end
 
@@ -52,7 +51,7 @@ module Pgvector
 
       class Bit < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          string
+          ::Pgvector::Bit.from_text(string).to_s
         end
       end
 
