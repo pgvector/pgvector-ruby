@@ -32,6 +32,15 @@ class PgTest < Minitest::Test
     assert_nil res[1]["half_embedding"]
   end
 
+  def test_bit_text
+    embedding = "101"
+    conn.exec_params("INSERT INTO pg_items (binary_embedding) VALUES ($1), (NULL)", [embedding])
+
+    res = conn.exec("SELECT * FROM pg_items ORDER BY id").to_a
+    assert_equal embedding, res[0]["binary_embedding"]
+    assert_nil res[1]["binary_embedding"]
+  end
+
   def test_sparsevec_text
     embedding = Pgvector::SparseVector.new([1.5, 2, 3])
     conn.exec_params("INSERT INTO pg_items (sparse_embedding) VALUES ($1), (NULL)", [embedding])
@@ -58,7 +67,7 @@ class PgTest < Minitest::Test
         conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
       end
       conn.exec("DROP TABLE IF EXISTS pg_items")
-      conn.exec("CREATE TABLE pg_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), sparse_embedding sparsevec(3))")
+      conn.exec("CREATE TABLE pg_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(3), sparse_embedding sparsevec(3))")
 
       registry = PG::BasicTypeRegistry.new.define_default_types
       Pgvector::PG.register_vector(registry)

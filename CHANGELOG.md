@@ -1,5 +1,6 @@
 ## 0.3.1 (unreleased)
 
+- Added support for `bit` type to pg
 - Added extension for Sequel
 
 ## 0.3.0 (2024-06-25)

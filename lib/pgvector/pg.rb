@@ -9,6 +9,8 @@ module Pgvector
       # no binary decoder for halfvec since unpack does not have directive for half-precision
       registry.register_type(0, "halfvec", nil, TextDecoder::Halfvec)
 
+      registry.register_type(0, "bit", nil, TextDecoder::Bit)
+
       registry.register_type(0, "sparsevec", nil, TextDecoder::Sparsevec)
       registry.register_type(1, "sparsevec", nil, BinaryDecoder::Sparsevec)
     end
@@ -37,6 +39,12 @@ module Pgvector
       class Halfvec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
           HalfVector.from_text(string).to_a
+        end
+      end
+
+      class Bit < ::PG::SimpleDecoder
+        def decode(string, tuple = nil, field = nil)
+          string
         end
       end
 
