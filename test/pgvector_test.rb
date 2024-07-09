@@ -14,7 +14,7 @@ class PgvectorTest < Minitest::Test
   end
 
   def test_encode_sparse_vector
-    assert_equal "{1:1.0,2:2.0,3:3.0}/3", Pgvector.encode(Pgvector::SparseVector.new([1, 2, 3]))
+    assert_equal "{1:1.0,3:2.0,5:3.0}/6", Pgvector.encode(Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0]))
   end
 
   def test_decode_vector
@@ -22,6 +22,6 @@ class PgvectorTest < Minitest::Test
   end
 
   def test_decode_sparse_vector
-    assert_equal [1, 2, 3], Pgvector.decode("{1:1.0,2:2.0,3:3.0}/3").to_a
+    assert_equal [1, 0, 2, 0, 3, 0], Pgvector.decode("{1:1.0,3:2.0,5:3.0}/6").to_a
   end
 end
