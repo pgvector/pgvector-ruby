@@ -43,51 +43,75 @@ class TestSequel < Minitest::Test
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding]) }
   end
 
-  def test_model
-    Item.create(id: 1, embedding: [1, 1, 1], half_embedding: [1, 1, 1], binary_embedding: "000", sparse_embedding: Pgvector::SparseVector.new([1, 1, 1]))
-    Item.create(id: 2, embedding: [2, 2, 2], half_embedding: [2, 2, 2], binary_embedding: "101", sparse_embedding: Pgvector::SparseVector.new([2, 2, 2]))
-    Item.create(id: 3, embedding: [1, 1, 2], half_embedding: [1, 1, 2], binary_embedding: "111", sparse_embedding: Pgvector::SparseVector.new([1, 1, 2]))
-
+  def test_model_vector_euclidean
+    create_items
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:embedding)
+  end
 
+  def test_model_vector_inner_product
+    create_items
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "inner_product").limit(5)
     assert_equal [2, 3, 1], results.map(&:id)
     assert_equal [6, 4, 3], results.map { |r| r[:neighbor_distance] }
+  end
 
+  def test_model_vector_taxicab
+    create_items
     results = Item.nearest_neighbors(:embedding, [1, 1, 1], distance: "taxicab").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, 3], results.map { |r| r[:neighbor_distance] }
+  end
 
+  def test_instance_vector_euclidean
+    create_items
     results = Item.first.nearest_neighbors(:embedding, distance: "euclidean").limit(5)
     assert_equal [3, 2], results.map(&:id)
     assert_equal [1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
+  end
 
+  def test_instance_vector_inner_product
+    create_items
     results = Item.first.nearest_neighbors(:embedding, distance: "inner_product").limit(5)
     assert_equal [2, 3], results.map(&:id)
     assert_equal [6, 4], results.map { |r| r[:neighbor_distance] }
+  end
 
+  def test_instance_vector_taxicab
+    create_items
     results = Item.first.nearest_neighbors(:embedding, distance: "taxicab").limit(5)
     assert_equal [3, 2], results.map(&:id)
     assert_equal [1, 3], results.map { |r| r[:neighbor_distance] }
+  end
 
+  def test_model_halfvec_euclidean
+    create_items
     results = Item.nearest_neighbors(:half_embedding, [1, 1, 1], distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:half_embedding)
+  end
 
+  def test_model_bit_hamming
+    create_items
     results = Item.nearest_neighbors(:binary_embedding, "101", distance: "hamming").limit(5)
     assert_equal [2, 3, 1], results.map(&:id)
     assert_equal [0, 1, 2], results.map { |r| r[:neighbor_distance] }
     assert_equal ["101", "111", "000"], results.map(&:binary_embedding)
+  end
 
+  def test_model_sparsevec_euclidean
+    create_items
     results = Item.nearest_neighbors(:sparse_embedding, Pgvector::SparseVector.new([1, 1, 1]), distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:sparse_embedding).map(&:to_a)
+  end
 
+  def test_model_dataset
+    create_items
     sampled_item = Item.order(Sequel.function(:random)).first
     results = Item.where(id: sampled_item.id).nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(1)
     assert_equal [sampled_item.embedding], results.map(&:embedding)
@@ -95,5 +119,11 @@ class TestSequel < Minitest::Test
 
   def items
     DB[:sequel_items]
+  end
+
+  def create_items
+    Item.create(id: 1, embedding: [1, 1, 1], half_embedding: [1, 1, 1], binary_embedding: "000", sparse_embedding: Pgvector::SparseVector.new([1, 1, 1]))
+    Item.create(id: 2, embedding: [2, 2, 2], half_embedding: [2, 2, 2], binary_embedding: "101", sparse_embedding: Pgvector::SparseVector.new([2, 2, 2]))
+    Item.create(id: 3, embedding: [1, 1, 2], half_embedding: [1, 1, 2], binary_embedding: "111", sparse_embedding: Pgvector::SparseVector.new([1, 1, 2]))
   end
 end
