@@ -1,3 +1,7 @@
+## 0.3.1 (unreleased)
+
+- Added extension for Sequel
+
 ## 0.3.0 (2024-06-25)
 
 - Added support for `halfvec` and `sparsevec` types

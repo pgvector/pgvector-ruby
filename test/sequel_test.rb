@@ -36,6 +36,13 @@ class TestSequel < Minitest::Test
     assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding]) }
   end
 
+  def test_extension
+    items.insert(embedding: Pgvector.encode([1, 1, 1]))
+    items.multi_insert([{embedding: "[2,2,2]"}, {embedding: "[1,1,2]"}])
+    results = items.extension(:pgvector).nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
+    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding]) }
+  end
+
   def test_model
     Item.create(id: 1, embedding: [1, 1, 1], half_embedding: [1, 1, 1], binary_embedding: "000", sparse_embedding: Pgvector::SparseVector.new([1, 1, 1]))
     Item.create(id: 2, embedding: [2, 2, 2], half_embedding: [2, 2, 2], binary_embedding: "101", sparse_embedding: Pgvector::SparseVector.new([2, 2, 2]))
