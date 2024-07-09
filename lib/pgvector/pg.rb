@@ -10,6 +10,7 @@ module Pgvector
       registry.register_type(0, "halfvec", nil, TextDecoder::Halfvec)
 
       registry.register_type(0, "bit", nil, TextDecoder::Bit)
+      registry.register_type(1, "bit", nil, BinaryDecoder::Bit)
 
       registry.register_type(0, "sparsevec", nil, TextDecoder::Sparsevec)
       registry.register_type(1, "sparsevec", nil, BinaryDecoder::Sparsevec)
@@ -19,6 +20,13 @@ module Pgvector
       class Vector < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
           ::Pgvector::Vector.from_binary(string).to_a
+        end
+      end
+
+      class Bit < ::PG::SimpleDecoder
+        def decode(string, tuple = nil, field = nil)
+          length = string[..3].unpack1("l>")
+          string[4..].unpack("B*").join[...length]
         end
       end
 
