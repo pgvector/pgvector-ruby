@@ -18,7 +18,7 @@ class PgvectorTest < Minitest::Test
   end
 
   def test_decode_vector
-    assert_equal [1, 2, 3], Pgvector.decode("[1,2,3]")
+    assert_equal [1, 2, 3], Pgvector.decode("[1.0,2.0,3.0]")
   end
 
   def test_decode_sparse_vector
