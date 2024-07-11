@@ -1,4 +1,4 @@
-## 0.3.1 (unreleased)
+## 0.3.1 (2024-07-10)
 
 - Added support for `bit` type to pg
 - Added extension for Sequel
