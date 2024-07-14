@@ -77,10 +77,18 @@ class PgTest < Minitest::Test
   end
 
   def test_type_map_text
-    # no need for type map
+    coder = PG::TextEncoder::CopyRow.new(type_map: Pgvector::PG::TextEncoder.type_map)
+    assert_equal "[1.0,2.0,3.0]\n", coder.encode([Pgvector::Vector.new([1, 2, 3])])
+    assert_equal "[1.0,2.0,3.0]\n", coder.encode([Pgvector::HalfVector.new([1, 2, 3])])
+    assert_equal "101\n", coder.encode([Pgvector::Bit.new([true, false, true])])
+    assert_equal "{1:1.0,2:2.0,3:3.0}/3\n", coder.encode([Pgvector::SparseVector.new([1, 2, 3])])
+  end
+
+  def test_type_map_none
     coder = PG::TextEncoder::CopyRow.new
     assert_equal "[1.0,2.0,3.0]\n", coder.encode([Pgvector::Vector.new([1, 2, 3])])
     assert_equal "[1.0,2.0,3.0]\n", coder.encode([Pgvector::HalfVector.new([1, 2, 3])])
+    assert_equal "101\n", coder.encode([Pgvector::Bit.new([true, false, true])])
     assert_equal "{1:1.0,2:2.0,3:3.0}/3\n", coder.encode([Pgvector::SparseVector.new([1, 2, 3])])
   end
 

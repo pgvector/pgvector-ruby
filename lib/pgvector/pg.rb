@@ -78,6 +78,16 @@ module Pgvector
     end
 
     module TextEncoder
+      # experimental
+      def self.type_map
+        tm = ::PG::TypeMapByClass.new
+        tm[::Pgvector::Vector] = Vector.new
+        tm[::Pgvector::HalfVector] = Halfvec.new
+        tm[::Pgvector::Bit] = Bit.new
+        tm[::Pgvector::SparseVector] = Sparsevec.new
+        tm
+      end
+
       class Vector < ::PG::SimpleEncoder
         def encode(value)
           value.to_s
@@ -85,6 +95,12 @@ module Pgvector
       end
 
       class Halfvec < ::PG::SimpleEncoder
+        def encode(value)
+          value.to_s
+        end
+      end
+
+      class Bit < ::PG::SimpleEncoder
         def encode(value)
           value.to_s
         end
