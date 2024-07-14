@@ -84,13 +84,13 @@ module Pgvector
         end
       end
 
-      class HalfVector < ::PG::SimpleEncoder
+      class Halfvec < ::PG::SimpleEncoder
         def encode(value)
           value.to_s
         end
       end
 
-      class SparseVector < ::PG::SimpleEncoder
+      class Sparsevec < ::PG::SimpleEncoder
         def encode(value)
           value.to_s
         end
