@@ -72,8 +72,10 @@ class PgTest < Minitest::Test
 
   def test_type_map_binary
     vec = Pgvector::Vector.new([1, 2, 3])
+    sparse_vec = Pgvector::SparseVector.new([1, 2, 3])
     coder = PG::BinaryEncoder::CopyRow.new(type_map: Pgvector::PG::BinaryEncoder.type_map)
     assert_match vec.to_binary, coder.encode([vec])
+    assert_match sparse_vec.to_binary, coder.encode([sparse_vec])
   end
 
   def test_type_map_text

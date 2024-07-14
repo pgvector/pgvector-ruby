@@ -30,6 +30,14 @@ module Pgvector
       arr
     end
 
+    def to_binary
+      nnz = @indices.size
+      buffer = [dimensions, nnz, 0].pack("l>l>l>")
+      @indices.pack("l>#{nnz}", buffer: buffer)
+      @values.pack("g#{nnz}", buffer: buffer)
+      buffer
+    end
+
     private
 
     def from_hash(data, dimensions)

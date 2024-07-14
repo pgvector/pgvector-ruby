@@ -41,10 +41,17 @@ module Pgvector
       def self.type_map
         tm = ::PG::TypeMapByClass.new
         tm[::Pgvector::Vector] = Vector.new
+        tm[::Pgvector::SparseVector] = Sparsevec.new
         tm
       end
 
       class Vector < ::PG::SimpleEncoder
+        def encode(value)
+          value.to_binary
+        end
+      end
+
+      class Sparsevec < ::PG::SimpleEncoder
         def encode(value)
           value.to_binary
         end
