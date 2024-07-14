@@ -31,7 +31,7 @@ module Pgvector
 
       class Sparsevec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          SparseVector.from_binary(string)
+          ::Pgvector::SparseVector.from_binary(string)
         end
       end
     end
@@ -67,7 +67,7 @@ module Pgvector
 
       class Halfvec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          HalfVector.from_text(string).to_a
+          ::Pgvector::HalfVector.from_text(string).to_a
         end
       end
 
@@ -79,7 +79,7 @@ module Pgvector
 
       class Sparsevec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
-          SparseVector.from_text(string)
+          ::Pgvector::SparseVector.from_text(string)
         end
       end
     end
