@@ -10,4 +10,12 @@ class VectorTest < Minitest::Test
     vec = Pgvector::Vector.new([1, 2, 3])
     assert_equal [1, 2, 3], vec.to_a
   end
+
+  def test_numo
+    a = Pgvector::Vector.new([1, 2, 3])
+    b = Pgvector::Vector.new(Numo::NArray.cast([1, 2, 3]))
+    assert_equal a.to_s, b.to_s
+    assert_equal a.to_a, b.to_a
+    assert_equal a.to_binary, b.to_binary
+  end
 end

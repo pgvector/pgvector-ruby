@@ -1,7 +1,13 @@
 module Pgvector
   class Vector
     def initialize(data)
-      @data = data.to_a.map(&:to_f)
+      # keep as NArray when possible for performance
+      @data =
+        if numo?(data)
+          data.cast_to(Numo::SFloat)
+        else
+          data.to_a.map(&:to_f)
+        end
     end
 
     def self.from_text(string)
@@ -19,7 +25,21 @@ module Pgvector
     end
 
     def to_a
-      @data
+      @data.to_a
+    end
+
+    def to_binary
+      if numo?(@data)
+        [@data.shape[0], 0].pack("s>s>") + @data.to_network.to_binary
+      else
+        [@data.size, 0].pack("s>s>") + @data.pack("g*")
+      end
+    end
+
+    private
+
+    def numo?(data)
+      defined?(Numo::NArray) && data.is_a?(Numo::NArray)
     end
   end
 end

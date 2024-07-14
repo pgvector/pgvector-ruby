@@ -1,3 +1,7 @@
+## 0.3.2 (unreleased)
+
+- Added `to_binary` method to `Vector`
+
 ## 0.3.1 (2024-07-10)
 
 - Added support for `bit` type to pg
