@@ -36,6 +36,21 @@ module Pgvector
       end
     end
 
+    module BinaryEncoder
+      # experimental
+      def self.type_map
+        tm = ::PG::TypeMapByClass.new
+        tm[::Pgvector::Vector] = Vector.new
+        tm
+      end
+
+      class Vector < ::PG::SimpleEncoder
+        def encode(value)
+          value.to_binary
+        end
+      end
+    end
+
     module TextDecoder
       class Vector < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
@@ -58,6 +73,21 @@ module Pgvector
       class Sparsevec < ::PG::SimpleDecoder
         def decode(string, tuple = nil, field = nil)
           SparseVector.from_text(string)
+        end
+      end
+    end
+
+    module TextEncoder
+      # experimental
+      def self.type_map
+        tm = ::PG::TypeMapByClass.new
+        tm[::Pgvector::Vector] = Vector.new
+        tm
+      end
+
+      class Vector < ::PG::SimpleEncoder
+        def encode(value)
+          value.to_s
         end
       end
     end

@@ -70,6 +70,17 @@ class PgTest < Minitest::Test
     assert_nil res[1]["sparse_embedding"]
   end
 
+  def test_type_map_binary
+    vec = Pgvector::Vector.new([1, 2, 3])
+    coder = PG::BinaryEncoder::CopyRow.new(type_map: Pgvector::PG::BinaryEncoder.type_map)
+    assert_include vec.to_binary, coder.encode([vec])
+  end
+
+  def test_type_map_binary
+    coder = PG::TextEncoder::CopyRow.new(type_map: Pgvector::PG::TextEncoder.type_map)
+    assert_equal "[1.0,2.0,3.0]\n", coder.encode([Pgvector::Vector.new([1, 2, 3])])
+  end
+
   def conn
     @@conn ||= begin
       conn = PG.connect(dbname: "pgvector_ruby_test")
