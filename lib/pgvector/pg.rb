@@ -3,17 +3,17 @@ require "pg"
 module Pgvector
   module PG
     def self.register_vector(registry)
-      registry.register_type(0, "vector", nil, TextDecoder::Vector)
-      registry.register_type(1, "vector", nil, BinaryDecoder::Vector)
+      registry.register_type(0, "vector", TextEncoder::Vector, TextDecoder::Vector)
+      registry.register_type(1, "vector", BinaryEncoder::Vector, BinaryDecoder::Vector)
 
       # no binary decoder for halfvec since unpack does not have directive for half-precision
-      registry.register_type(0, "halfvec", nil, TextDecoder::Halfvec)
+      registry.register_type(0, "halfvec", TextEncoder::Halfvec, TextDecoder::Halfvec)
 
-      registry.register_type(0, "bit", nil, TextDecoder::Bit)
+      registry.register_type(0, "bit", TextEncoder::Bit, TextDecoder::Bit)
       registry.register_type(1, "bit", nil, BinaryDecoder::Bit)
 
-      registry.register_type(0, "sparsevec", nil, TextDecoder::Sparsevec)
-      registry.register_type(1, "sparsevec", nil, BinaryDecoder::Sparsevec)
+      registry.register_type(0, "sparsevec", TextEncoder::Sparsevec, TextDecoder::Sparsevec)
+      registry.register_type(1, "sparsevec", BinaryEncoder::Sparsevec, BinaryDecoder::Sparsevec)
     end
 
     module BinaryDecoder
