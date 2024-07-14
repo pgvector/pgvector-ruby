@@ -73,12 +73,14 @@ class PgTest < Minitest::Test
   def test_type_map_binary
     vec = Pgvector::Vector.new([1, 2, 3])
     coder = PG::BinaryEncoder::CopyRow.new(type_map: Pgvector::PG::BinaryEncoder.type_map)
-    assert_include vec.to_binary, coder.encode([vec])
+    assert_match vec.to_binary, coder.encode([vec])
   end
 
-  def test_type_map_binary
+  def test_type_map_text
     coder = PG::TextEncoder::CopyRow.new(type_map: Pgvector::PG::TextEncoder.type_map)
     assert_equal "[1.0,2.0,3.0]\n", coder.encode([Pgvector::Vector.new([1, 2, 3])])
+    assert_equal "[1.0,2.0,3.0]\n", coder.encode([Pgvector::HalfVector.new([1, 2, 3])])
+    assert_equal "{1:1.0,2:2.0,3:3.0}/3\n", coder.encode([Pgvector::SparseVector.new([1, 2, 3])])
   end
 
   def conn
