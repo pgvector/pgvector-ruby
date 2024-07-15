@@ -96,14 +96,18 @@ class PgTest < Minitest::Test
 
   def test_copy_text
     embedding = Pgvector::Vector.new([1, 2, 3])
+    half_embedding = Pgvector::HalfVector.new([1, 2, 3])
+    binary_embedding = Pgvector::Bit.new([true, false, true])
     sparse_embedding = Pgvector::SparseVector.new([1, 2, 3])
     coder = PG::TextEncoder::CopyRow.new
-    conn.copy_data("COPY pg_items (embedding, sparse_embedding) FROM STDIN", coder) do
-      conn.put_copy_data([embedding, sparse_embedding])
+    conn.copy_data("COPY pg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN", coder) do
+      conn.put_copy_data([embedding, half_embedding, binary_embedding, sparse_embedding])
     end
     res = conn.exec("SELECT * FROM pg_items").first
-    assert_equal embedding.to_a, res["embedding"].to_a
-    assert_equal sparse_embedding.to_a, res["sparse_embedding"].to_a
+    assert_equal [1, 2, 3], res["embedding"]
+    assert_equal [1, 2, 3], res["half_embedding"].to_a
+    assert_equal "101", res["binary_embedding"]
+    assert_equal [1, 2, 3], res["sparse_embedding"].to_a
   end
 
   def test_copy_binary
@@ -114,8 +118,8 @@ class PgTest < Minitest::Test
       conn.put_copy_data([embedding.to_binary, sparse_embedding.to_binary])
     end
     res = conn.exec("SELECT * FROM pg_items").first
-    assert_equal embedding.to_a, res["embedding"].to_a
-    assert_equal sparse_embedding.to_a, res["sparse_embedding"].to_a
+    assert_equal [1, 2, 3], res["embedding"]
+    assert_equal [1, 2, 3], res["sparse_embedding"].to_a
   end
 
   def conn
