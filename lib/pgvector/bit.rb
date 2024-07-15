@@ -13,8 +13,8 @@ module Pgvector
     end
 
     def self.from_binary(string)
-      length = string[..3].unpack1("l>")
-      Bit.new(string[4..].unpack("B*").join[...length])
+      length, data = string.unpack("l>B*")
+      Bit.new(data[...length])
     end
 
     def to_s
