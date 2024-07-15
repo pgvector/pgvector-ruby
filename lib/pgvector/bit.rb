@@ -24,5 +24,11 @@ module Pgvector
     def to_a
       @data.each_char.map { |v| v != "0" }
     end
+
+    def to_binary
+      buffer = [@data.length].pack("l>")
+      @data.split(/.{8}/).pack("B*", buffer: buffer)
+      buffer
+    end
   end
 end

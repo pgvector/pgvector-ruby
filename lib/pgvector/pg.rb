@@ -10,7 +10,7 @@ module Pgvector
       registry.register_type(0, "halfvec", TextEncoder::Halfvec, TextDecoder::Halfvec)
 
       registry.register_type(0, "bit", TextEncoder::Bit, TextDecoder::Bit)
-      registry.register_type(1, "bit", nil, BinaryDecoder::Bit)
+      registry.register_type(1, "bit", BinaryEncoder::Bit, BinaryDecoder::Bit)
 
       registry.register_type(0, "sparsevec", TextEncoder::Sparsevec, TextDecoder::Sparsevec)
       registry.register_type(1, "sparsevec", BinaryEncoder::Sparsevec, BinaryDecoder::Sparsevec)
@@ -41,11 +41,18 @@ module Pgvector
       def self.type_map
         tm = ::PG::TypeMapByClass.new
         tm[::Pgvector::Vector] = Vector.new
+        tm[::Pgvector::Bit] = Bit.new
         tm[::Pgvector::SparseVector] = Sparsevec.new
         tm
       end
 
       class Vector < ::PG::SimpleEncoder
+        def encode(value)
+          value.to_binary
+        end
+      end
+
+      class Bit < ::PG::SimpleEncoder
         def encode(value)
           value.to_binary
         end

@@ -88,9 +88,11 @@ class PgTest < Minitest::Test
 
   def test_type_map_binary
     vec = Pgvector::Vector.new([1, 2, 3])
+    binary_vec = Pgvector::Bit.new([true, false, true])
     sparse_vec = Pgvector::SparseVector.new([1, 2, 3])
     coder = PG::BinaryEncoder::CopyRow.new(type_map: Pgvector::PG::BinaryEncoder.type_map)
     assert_match vec.to_binary, coder.encode([vec])
+    assert_match binary_vec.to_binary, coder.encode([binary_vec])
     assert_match sparse_vec.to_binary, coder.encode([sparse_vec])
   end
 
@@ -112,13 +114,15 @@ class PgTest < Minitest::Test
 
   def test_copy_binary
     embedding = Pgvector::Vector.new([1, 2, 3])
+    binary_embedding = Pgvector::Bit.new([true, false, true])
     sparse_embedding = Pgvector::SparseVector.new([1, 2, 3])
     coder = PG::BinaryEncoder::CopyRow.new
-    conn.copy_data("COPY pg_items (embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)", coder) do
-      conn.put_copy_data([embedding.to_binary, sparse_embedding.to_binary])
+    conn.copy_data("COPY pg_items (embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)", coder) do
+      conn.put_copy_data([embedding.to_binary, binary_embedding.to_binary, sparse_embedding.to_binary])
     end
     res = conn.exec("SELECT * FROM pg_items").first
     assert_equal [1, 2, 3], res["embedding"]
+    assert_equal "101", res["binary_embedding"]
     assert_equal [1, 2, 3], res["sparse_embedding"].to_a
   end
 
