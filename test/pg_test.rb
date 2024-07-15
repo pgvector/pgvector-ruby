@@ -94,6 +94,30 @@ class PgTest < Minitest::Test
     assert_match sparse_vec.to_binary, coder.encode([sparse_vec])
   end
 
+  def test_copy_text
+    embedding = Pgvector::Vector.new([1, 2, 3])
+    sparse_embedding = Pgvector::SparseVector.new([1, 2, 3])
+    coder = PG::TextEncoder::CopyRow.new
+    conn.copy_data("COPY pg_items (embedding, sparse_embedding) FROM STDIN", coder) do
+      conn.put_copy_data([embedding, sparse_embedding])
+    end
+    res = conn.exec("SELECT * FROM pg_items").first
+    assert_equal embedding.to_a, res["embedding"].to_a
+    assert_equal sparse_embedding.to_a, res["sparse_embedding"].to_a
+  end
+
+  def test_copy_binary
+    embedding = Pgvector::Vector.new([1, 2, 3])
+    sparse_embedding = Pgvector::SparseVector.new([1, 2, 3])
+    coder = PG::BinaryEncoder::CopyRow.new
+    conn.copy_data("COPY pg_items (embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)", coder) do
+      conn.put_copy_data([embedding.to_binary, sparse_embedding.to_binary])
+    end
+    res = conn.exec("SELECT * FROM pg_items").first
+    assert_equal embedding.to_a, res["embedding"].to_a
+    assert_equal sparse_embedding.to_a, res["sparse_embedding"].to_a
+  end
+
   def conn
     @@conn ||= begin
       conn = PG.connect(dbname: "pgvector_ruby_test")
