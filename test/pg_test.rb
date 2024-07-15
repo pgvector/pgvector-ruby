@@ -33,7 +33,7 @@ class PgTest < Minitest::Test
   end
 
   def test_bit_text
-    embedding = "1010000001"
+    embedding = "010100001"
     conn.exec_params("INSERT INTO pg_items (binary_embedding) VALUES ($1), (NULL)", [embedding])
 
     res = conn.exec("SELECT * FROM pg_items ORDER BY id").to_a
@@ -42,14 +42,14 @@ class PgTest < Minitest::Test
   end
 
   def test_bit_binary
-    embedding = "1010000001"
+    embedding = "010100001"
     conn.exec_params("INSERT INTO pg_items (binary_embedding) VALUES ($1), (NULL)", [embedding])
 
     res = conn.exec_params("SELECT * FROM pg_items ORDER BY id", [], 1).to_a
     assert_equal embedding, res[0]["binary_embedding"]
     assert_nil res[1]["binary_embedding"]
 
-    assert_equal "1010000010", conn.exec_params("SELECT '1010000010'::bit(10)", [], 1).first["bit"]
+    assert_equal "010100001", conn.exec_params("SELECT '010100001'::bit(9)", [], 1).first["bit"]
   end
 
   def test_sparsevec_text
@@ -99,7 +99,7 @@ class PgTest < Minitest::Test
   def test_copy_text
     embedding = Pgvector::Vector.new([1, 2, 3])
     half_embedding = Pgvector::HalfVector.new([1, 2, 3])
-    binary_embedding = Pgvector::Bit.new([true, false, true, false, false, false, false, false, false, true])
+    binary_embedding = Pgvector::Bit.new([false, true, false, true, false, false, false, false, true])
     sparse_embedding = Pgvector::SparseVector.new([1, 2, 3])
     coder = PG::TextEncoder::CopyRow.new
     conn.copy_data("COPY pg_items (embedding, half_embedding, binary_embedding, sparse_embedding) FROM STDIN", coder) do
@@ -108,13 +108,13 @@ class PgTest < Minitest::Test
     res = conn.exec("SELECT * FROM pg_items").first
     assert_equal [1, 2, 3], res["embedding"]
     assert_equal [1, 2, 3], res["half_embedding"].to_a
-    assert_equal "1010000001", res["binary_embedding"]
+    assert_equal "010100001", res["binary_embedding"]
     assert_equal [1, 2, 3], res["sparse_embedding"].to_a
   end
 
   def test_copy_binary
     embedding = Pgvector::Vector.new([1, 2, 3])
-    binary_embedding = Pgvector::Bit.new([true, false, true, false, false, false, false, false, false, true])
+    binary_embedding = Pgvector::Bit.new([false, true, false, true, false, false, false, false, true])
     sparse_embedding = Pgvector::SparseVector.new([1, 2, 3])
     coder = PG::BinaryEncoder::CopyRow.new
     conn.copy_data("COPY pg_items (embedding, binary_embedding, sparse_embedding) FROM STDIN WITH (FORMAT BINARY)", coder) do
@@ -122,7 +122,7 @@ class PgTest < Minitest::Test
     end
     res = conn.exec("SELECT * FROM pg_items").first
     assert_equal [1, 2, 3], res["embedding"]
-    assert_equal "1010000001", res["binary_embedding"]
+    assert_equal "010100001", res["binary_embedding"]
     assert_equal [1, 2, 3], res["sparse_embedding"].to_a
   end
 
@@ -134,7 +134,7 @@ class PgTest < Minitest::Test
         conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
       end
       conn.exec("DROP TABLE IF EXISTS pg_items")
-      conn.exec("CREATE TABLE pg_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(10), sparse_embedding sparsevec(3))")
+      conn.exec("CREATE TABLE pg_items (id bigserial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), binary_embedding bit(9), sparse_embedding sparsevec(3))")
 
       registry = PG::BasicTypeRegistry.new.define_default_types
       Pgvector::PG.register_vector(registry)
