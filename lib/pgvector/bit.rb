@@ -26,9 +26,7 @@ module Pgvector
     end
 
     def to_binary
-      buffer = [@data.length].pack("l>")
-      [@data].pack("B*", buffer: buffer)
-      buffer
+      [@data.length, @data].pack("l>B*")
     end
   end
 end
