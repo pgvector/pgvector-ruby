@@ -27,7 +27,10 @@ module Pgvector
 
     def to_binary
       buffer = [@data.length].pack("l>")
-      @data.split(/.{8}/).pack("B*", buffer: buffer)
+      # TODO improve
+      @data.scan(/.{1,8}/).each do |b|
+        [b].pack("B*", buffer: buffer)
+      end
       buffer
     end
   end
