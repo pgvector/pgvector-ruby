@@ -1,4 +1,4 @@
-## 0.3.2 (unreleased)
+## 0.3.2 (2024-07-17)
 
 - Added `to_binary` method to `Vector`, `Bit`, and `SparseVector`
 
