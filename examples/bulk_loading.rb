@@ -30,10 +30,13 @@ end
 puts "\nSuccess!"
 
 # create any indexes *after* loading initial data (skipping for this example)
-# puts "Creating index"
-# conn.exec("SET maintenance_work_mem = '8GB'")
-# conn.exec("SET max_parallel_maintenance_workers = 7")
-# conn.exec("CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)")
+create_index = false
+if create_index
+  puts "Creating index"
+  conn.exec("SET maintenance_work_mem = '8GB'")
+  conn.exec("SET max_parallel_maintenance_workers = 7")
+  conn.exec("CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)")
+end
 
 # update planner statistics for good measure
 conn.exec("ANALYZE items")
