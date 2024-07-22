@@ -28,6 +28,7 @@ Or check out some examples:
 - [Topic modeling](examples/topic_modeling.rb) with tomoto.rb
 - [User-based recommendations](examples/disco_user_recs.rb) with Disco
 - [Item-based recommendations](examples/disco_item_recs.rb) with Disco
+- [Horizontal scaling](examples/citus.rb) with Citus
 - [Bulk loading](examples/bulk_loading.rb) with `COPY`
 
 ## pg
