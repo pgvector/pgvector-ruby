@@ -151,3 +151,12 @@ createdb pgvector_ruby_test
 bundle install
 bundle exec rake test
 ```
+
+To run an example:
+
+```sh
+cd examples
+createdb pgvector_example
+bundle install
+bundle exec ruby bulk_loading.rb
+```
