@@ -25,6 +25,7 @@ Or check out some examples:
 
 - [Embeddings](examples/openai_embeddings.rb) with OpenAI
 - [Binary embeddings](examples/cohere_embeddings.rb) with Cohere
+- [Morgan fingerprints](examples/morgan_fingerprints.rb) with RDKit.rb
 - [Topic modeling](examples/topic_modeling.rb) with tomoto.rb
 - [User-based recommendations](examples/disco_user_recs.rb) with Disco
 - [Item-based recommendations](examples/disco_item_recs.rb) with Disco
