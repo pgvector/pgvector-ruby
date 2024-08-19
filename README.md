@@ -25,6 +25,9 @@ Or check out some examples:
 
 - [Embeddings](examples/openai_embeddings.rb) with OpenAI
 - [Binary embeddings](examples/cohere_embeddings.rb) with Cohere
+- [Sentence embeddings](examples/sentence_embeddings.rb) with Transformers.rb
+- [Hybrid search](examples/hybrid_search.rb) with Transformers.rb (Reciprocal Rank Fusion)
+- [Sparse search](examples/sparse_search.rb) with Transformers.rb
 - [Morgan fingerprints](examples/morgan_fingerprints.rb) with RDKit.rb
 - [Topic modeling](examples/topic_modeling.rb) with tomoto.rb
 - [User-based recommendations](examples/disco_user_recs.rb) with Disco
