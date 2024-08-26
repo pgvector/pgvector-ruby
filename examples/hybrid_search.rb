@@ -1,6 +1,6 @@
+require "informers"
 require "pg"
 require "pgvector"
-require "transformers-rb"
 
 conn = PG.connect(dbname: "pgvector_example")
 conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
@@ -9,14 +9,14 @@ conn.exec("DROP TABLE IF EXISTS documents")
 conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(384))")
 conn.exec("CREATE INDEX ON documents USING GIN (to_tsvector('english', content))")
 
-model = Transformers::SentenceTransformer.new("sentence-transformers/multi-qa-MiniLM-L6-cos-v1")
+model = Informers::Model.new("Xenova/multi-qa-MiniLM-L6-cos-v1")
 
 input = [
   "The dog is barking",
   "The cat is purring",
   "The bear is growling"
 ]
-embeddings = model.encode(input)
+embeddings = model.embed(input)
 input.zip(embeddings) do |content, embedding|
   conn.exec_params("INSERT INTO documents (content, embedding) VALUES ($1, $2)", [content, embedding])
 end
@@ -45,7 +45,7 @@ ORDER BY score DESC
 LIMIT 5
 SQL
 query = "growling bear"
-query_embedding = model.encode(query)
+query_embedding = model.embed(query)
 k = 60
 result = conn.exec_params(sql, [query, query_embedding, k])
 result.each do |row|

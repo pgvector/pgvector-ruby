@@ -1,6 +1,6 @@
+require "informers"
 require "pg"
 require "pgvector"
-require "transformers-rb"
 
 conn = PG.connect(dbname: "pgvector_example")
 conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
@@ -8,14 +8,14 @@ conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
 conn.exec("DROP TABLE IF EXISTS documents")
 conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(384))")
 
-model = Transformers::SentenceTransformer.new("sentence-transformers/all-MiniLM-L6-v2")
+model = Informers::Model.new("sentence-transformers/all-MiniLM-L6-v2")
 
 input = [
   "The dog is barking",
   "The cat is purring",
   "The bear is growling"
 ]
-embeddings = model.encode(input)
+embeddings = model.embed(input)
 
 input.zip(embeddings) do |content, embedding|
   conn.exec_params("INSERT INTO documents (content, embedding) VALUES ($1, $2)", [content, embedding])
