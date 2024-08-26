@@ -23,17 +23,17 @@ And follow the instructions for your database library:
 
 Or check out some examples:
 
-- [Embeddings](examples/openai_embeddings.rb) with OpenAI
-- [Binary embeddings](examples/cohere_embeddings.rb) with Cohere
-- [Sentence embeddings](examples/sentence_embeddings.rb) with Informers
-- [Hybrid search](examples/hybrid_search.rb) with Informers (Reciprocal Rank Fusion)
-- [Sparse search](examples/sparse_search.rb) with Transformers.rb
-- [Morgan fingerprints](examples/morgan_fingerprints.rb) with RDKit.rb
-- [Topic modeling](examples/topic_modeling.rb) with tomoto.rb
-- [User-based recommendations](examples/disco_user_recs.rb) with Disco
-- [Item-based recommendations](examples/disco_item_recs.rb) with Disco
-- [Horizontal scaling](examples/citus.rb) with Citus
-- [Bulk loading](examples/bulk_loading.rb) with `COPY`
+- [Embeddings](examples/openai/example.rb) with OpenAI
+- [Binary embeddings](examples/cohere/example.rb) with Cohere
+- [Sentence embeddings](examples/informers/example.rb) with Informers
+- [Hybrid search](examples/hybrid/example.rb) with Informers (Reciprocal Rank Fusion)
+- [Sparse search](examples/sparse/example.rb) with Transformers.rb
+- [Morgan fingerprints](examples/rdkit/example.rb) with RDKit.rb
+- [Topic modeling](examples/tomoto/example.rb) with tomoto.rb
+- [User-based recommendations](examples/disco/user_recs.rb) with Disco
+- [Item-based recommendations](examples/disco/item_recs.rb) with Disco
+- [Horizontal scaling](examples/citus/example.rb) with Citus
+- [Bulk loading](examples/loading/example.rb) with `COPY`
 
 ## pg
 

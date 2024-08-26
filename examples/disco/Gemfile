@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gemspec path: "../.."
+
+gem "disco"
+gem "pg"
+gem "sequel"
