@@ -159,8 +159,8 @@ bundle exec rake test
 To run an example:
 
 ```sh
-cd examples
-createdb pgvector_example
+cd examples/loading
 bundle install
-bundle exec ruby bulk_loading.rb
+createdb pgvector_example
+bundle exec ruby example.rb
 ```
