@@ -30,7 +30,7 @@ module Pgvector
 
     def to_binary
       if numo?(@data)
-        [@data.shape[0], 0].pack("s>s>") + @data.to_network.to_binary
+        [@data.shape[0], 0].pack("s>s>") + @data.to_network.to_binary.force_encoding(Encoding::BINARY)
       else
         buffer = [@data.size, 0].pack("s>s>")
         @data.pack("g*", buffer: buffer)
