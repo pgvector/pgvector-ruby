@@ -3,6 +3,8 @@ require_relative "test_helper"
 DB = Sequel.connect("postgres://localhost/pgvector_ruby_test")
 
 if ENV["VERBOSE"]
+  require "logger"
+
   DB.loggers << Logger.new($stdout, formatter: ->(_, _, _, msg) { "#{msg}\n" })
 end
 
