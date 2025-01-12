@@ -10,7 +10,7 @@ categories = Numo::Int64.new(rows, dimensions).rand(100)
 queries = Numo::SFloat.new(10, dimensions).rand
 
 # enable extensions
-conn = PG.connect(dbname: "pgvector_example")
+conn = PG.connect(dbname: "pgvector_citus")
 conn.exec("CREATE EXTENSION IF NOT EXISTS citus")
 conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
 
@@ -24,7 +24,7 @@ conn.exec("ALTER DATABASE pgvector_citus SET hnsw.ef_search = 20")
 conn.close
 
 # reconnect for updated GUC variables to take effect
-conn = PG.connect(dbname: "pgvector_example")
+conn = PG.connect(dbname: "pgvector_citus")
 
 puts "Creating distributed table"
 conn.exec("DROP TABLE IF EXISTS items")
