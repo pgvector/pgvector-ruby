@@ -9,7 +9,7 @@ conn.exec("DROP TABLE IF EXISTS documents")
 conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))")
 
 # https://docs.cohere.com/reference/embed
-def fetch_embeddings(texts, input_type)
+def embed(texts, input_type)
   url = "https://api.cohere.com/v1/embed"
   headers = {
     "Authorization" => "Bearer #{ENV.fetch("CO_API_KEY")}",
@@ -31,13 +31,13 @@ input = [
   "The cat is purring",
   "The bear is growling"
 ]
-embeddings = fetch_embeddings(input, "search_document")
+embeddings = embed(input, "search_document")
 input.zip(embeddings) do |content, embedding|
   conn.exec_params("INSERT INTO documents (content, embedding) VALUES ($1, $2)", [content, embedding])
 end
 
 query = "forest"
-query_embedding = fetch_embeddings([query], "search_query")[0]
+query_embedding = embed([query], "search_query")[0]
 result = conn.exec_params("SELECT content FROM documents ORDER BY embedding <~> $1 LIMIT 5", [query_embedding])
 result.each do |row|
   puts row["content"]

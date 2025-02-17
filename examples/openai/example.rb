@@ -11,7 +11,7 @@ conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embed
 
 # https://platform.openai.com/docs/guides/embeddings/how-to-get-embeddings
 # input can be an array with 2048 elements
-def fetch_embeddings(input)
+def embed(input)
   url = "https://api.openai.com/v1/embeddings"
   headers = {
     "Authorization" => "Bearer #{ENV.fetch("OPENAI_API_KEY")}",
@@ -31,14 +31,14 @@ input = [
   "The cat is purring",
   "The bear is growling"
 ]
-embeddings = fetch_embeddings(input)
-
+embeddings = embed(input)
 input.zip(embeddings) do |content, embedding|
   conn.exec_params("INSERT INTO documents (content, embedding) VALUES ($1, $2)", [content, embedding])
 end
 
-document_id = 1
-result = conn.exec_params("SELECT content FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5", [document_id])
+query = "forest"
+query_embedding = embed([query])[0]
+result = conn.exec_params("SELECT content FROM documents ORDER BY embedding <=> $1 LIMIT 5", [query_embedding])
 result.each do |row|
   puts row["content"]
 end

@@ -20,7 +20,7 @@ end
 
 # https://platform.openai.com/docs/guides/embeddings/how-to-get-embeddings
 # input can be an array with 2048 elements
-def fetch_embeddings(input)
+def embed(input)
   url = "https://api.openai.com/v1/embeddings"
   headers = {
     "Authorization" => "Bearer #{ENV.fetch("OPENAI_API_KEY")}",
@@ -40,7 +40,7 @@ input = [
   "The cat is purring",
   "The bear is growling"
 ]
-embeddings = fetch_embeddings(input)
+embeddings = embed(input)
 
 documents = []
 input.zip(embeddings) do |content, embedding|
@@ -48,5 +48,6 @@ input.zip(embeddings) do |content, embedding|
 end
 Document.multi_insert(documents)
 
-document = Document.first
-pp document.nearest_neighbors(:embedding, distance: "cosine").limit(5).map(&:content)
+query = "forest"
+query_embedding = embed([query])[0]
+pp Document.nearest_neighbors(:embedding, query_embedding, distance: "cosine").limit(5).map(&:content)
