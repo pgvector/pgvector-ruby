@@ -133,6 +133,48 @@ DB.add_index :items, :embedding, type: "hnsw", opclass: "vector_l2_ops"
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
+## Reference
+
+### Sparse Vectors
+
+Create a sparse vector from an array
+
+```ruby
+vec = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0])
+```
+
+Or a hash of non-zero elements
+
+```ruby
+vec = Pgvector::SparseVector.new({0 => 1, 2 => 2, 4 => 3}, 6)
+```
+
+Note: Indices start at 0
+
+Get the number of dimensions
+
+```ruby
+dim = vec.dimensions
+```
+
+Get the indices of non-zero elements
+
+```ruby
+indices = vec.indices
+```
+
+Get the values of non-zero elements
+
+```ruby
+values = vec.values
+```
+
+Get an array
+
+```ruby
+arr = vec.to_a
+```
+
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-ruby/blob/master/CHANGELOG.md)
