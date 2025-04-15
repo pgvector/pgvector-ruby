@@ -6,18 +6,18 @@ conn = PG.connect(dbname: "pgvector_example")
 conn.exec("CREATE EXTENSION IF NOT EXISTS vector")
 
 conn.exec("DROP TABLE IF EXISTS documents")
-conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))")
+conn.exec("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1536))")
 
 # https://docs.cohere.com/reference/embed
 def embed(texts, input_type)
-  url = "https://api.cohere.com/v1/embed"
+  url = "https://api.cohere.com/v2/embed"
   headers = {
     "Authorization" => "Bearer #{ENV.fetch("CO_API_KEY")}",
     "Content-Type" => "application/json"
   }
   data = {
     texts: texts,
-    model: "embed-english-v3.0",
+    model: "embed-v4.0",
     input_type: input_type,
     embedding_types: ["ubinary"]
   }
