@@ -1,6 +1,7 @@
 require_relative "test_helper"
 
-DB = Sequel.connect("postgres://localhost/pgvector_ruby_test")
+adapter = RUBY_PLATFORM == "java" ? "jdbc:postgresql" : "postgres"
+DB = Sequel.connect("#{adapter}://localhost/pgvector_ruby_test")
 
 if ENV["VERBOSE"]
   require "logger"
@@ -35,14 +36,14 @@ class TestSequel < Minitest::Test
     items.insert(embedding: Pgvector.encode([1, 1, 1]))
     items.multi_insert([{embedding: "[2,2,2]"}, {embedding: "[1,1,2]"}])
     results = items.order(Sequel.lit("embedding <-> ?", Pgvector.encode([1, 1, 1]))).limit(5)
-    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding]) }
+    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding].to_s) }
   end
 
   def test_extension
     items.insert(embedding: Pgvector.encode([1, 1, 1]))
     items.multi_insert([{embedding: "[2,2,2]"}, {embedding: "[1,1,2]"}])
     results = items.extension(:pgvector).nearest_neighbors(:embedding, [1, 1, 1], distance: "euclidean").limit(5)
-    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding]) }
+    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |r| Pgvector.decode(r[:embedding].to_s) }
   end
 
   def test_model_vector_euclidean

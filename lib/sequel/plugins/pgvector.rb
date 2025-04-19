@@ -76,7 +76,8 @@ module Sequel
 
         def [](k)
           if self.class.vector_columns.key?(k.to_sym)
-            ::Pgvector.decode(super)
+            # to_s needed for JRuby
+            ::Pgvector.decode(super.to_s)
           else
             super
           end
