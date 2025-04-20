@@ -1,6 +1,6 @@
 require_relative "test_helper"
 
-adapter = RUBY_PLATFORM == "java" ? "jdbc:postgresql" : "postgres"
+adapter = RUBY_ENGINE == "jruby" ? "jdbc:postgresql" : "postgres"
 DB = Sequel.connect("#{adapter}://localhost/pgvector_ruby_test")
 
 if ENV["VERBOSE"]

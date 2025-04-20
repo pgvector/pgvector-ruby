@@ -12,7 +12,7 @@ class VectorTest < Minitest::Test
   end
 
   def test_numo
-    skip if RUBY_PLATFORM == "java"
+    skip if ["jruby", "truffleruby"].include?(RUBY_ENGINE)
 
     a = Pgvector::Vector.new([1, 2, 3])
     b = Pgvector::Vector.new(Numo::NArray.cast([1, 2, 3]))

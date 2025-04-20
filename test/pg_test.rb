@@ -2,7 +2,7 @@ require_relative "test_helper"
 
 class PgTest < Minitest::Test
   def setup
-    skip if RUBY_PLATFORM == "java"
+    skip if RUBY_ENGINE == "jruby"
 
     conn.exec("DELETE FROM pg_items")
   end
