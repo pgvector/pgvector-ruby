@@ -20,10 +20,10 @@ puts "Loading #{embeddings.shape[0]} rows"
 coder = PG::BinaryEncoder::CopyRow.new
 conn.copy_data("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)", coder) do
   embeddings.each_over_axis(0).with_index do |embedding, i|
+    conn.put_copy_data([Pgvector::Vector.new(embedding).to_binary])
+
     # show progress
     putc "." if i % 10000 == 0
-
-    conn.put_copy_data([Pgvector::Vector.new(embedding).to_binary])
   end
 end
 
