@@ -9,6 +9,8 @@ module Pgvector
   autoload :PG, "pgvector/pg"
 
   def self.encode(data)
+    return nil if data.nil?
+
     if data.is_a?(Vector) || data.is_a?(HalfVector) || data.is_a?(SparseVector)
       data.to_s
     else
@@ -17,6 +19,8 @@ module Pgvector
   end
 
   def self.decode(string)
+    return nil if string.nil?
+
     if string[0] == "["
       Vector.from_text(string).to_a
     elsif string[0] == "{"
