@@ -10,6 +10,7 @@ module Sequel
 
       module DatasetMethods
         def nearest_neighbors(column, value, distance:)
+          return extension(:null_dataset).nullify if value.nil?
           value = ::Pgvector.encode(value) unless value.is_a?(String)
           quoted_column = quote_identifier(column)
           distance = distance.to_s
@@ -67,7 +68,7 @@ module Sequel
         end
 
         def []=(k, v)
-          if self.class.vector_columns.key?(k.to_sym) && !v.is_a?(String)
+          if self.class.vector_columns.key?(k.to_sym) && !v.is_a?(String) && !v.nil?
             super(k, ::Pgvector.encode(v))
           else
             super
@@ -75,11 +76,12 @@ module Sequel
         end
 
         def [](k)
-          if self.class.vector_columns.key?(k.to_sym)
+          v = super
+          if self.class.vector_columns.key?(k.to_sym) && !v.nil?
             # to_s needed for JRuby
-            ::Pgvector.decode(super.to_s)
+            ::Pgvector.decode(v.to_s)
           else
-            super
+            v
           end
         end
       end

@@ -153,6 +153,19 @@ class TestSequel < Minitest::Test
     assert_equal [1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
   end
 
+  def test_model_nil
+    create_items
+    assert_equal 0, Item.nearest_neighbors(:embedding, nil, distance: "euclidean").first(5).count
+  end
+
+  def test_instance_nil
+    create_items
+    item = Item.create(id: 4, embedding: nil)
+    item.refresh
+    assert_nil item.embedding
+    assert_equal 0, item.nearest_neighbors(:embedding, distance: "euclidean").first(5).count
+  end
+
   def test_model_dataset
     create_items
     sampled_item = Item.order(Sequel.function(:random)).first

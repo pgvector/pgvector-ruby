@@ -1,3 +1,7 @@
+## 0.3.3 (unreleased)
+
+- Fixed error with `nil` values for Sequel
+
 ## 0.3.2 (2024-07-17)
 
 - Added `to_binary` method to `Vector`, `Bit`, and `SparseVector`
