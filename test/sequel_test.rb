@@ -155,7 +155,7 @@ class TestSequel < Minitest::Test
 
   def test_model_nil
     create_items
-    assert_equal 0, Item.nearest_neighbors(:embedding, nil, distance: "euclidean").first(5).count
+    assert_empty Item.nearest_neighbors(:embedding, nil, distance: "euclidean").first(5)
   end
 
   def test_instance_nil
@@ -163,7 +163,7 @@ class TestSequel < Minitest::Test
     item = Item.create(id: 4, embedding: nil)
     item.refresh
     assert_nil item.embedding
-    assert_equal 0, item.nearest_neighbors(:embedding, distance: "euclidean").first(5).count
+    assert_empty item.nearest_neighbors(:embedding, distance: "euclidean").first(5)
   end
 
   def test_model_dataset
