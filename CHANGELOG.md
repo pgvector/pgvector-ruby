@@ -1,4 +1,4 @@
-## 0.3.3 (unreleased)
+## 0.3.3 (2026-03-18)
 
 - Fixed error with `nil` values for Sequel
 
