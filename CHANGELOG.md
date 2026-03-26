@@ -1,3 +1,7 @@
+## 0.4.0 (unreleased)
+
+- Dropped support for Ruby < 3.3
+
 ## 0.3.3 (2026-03-18)
 
 - Fixed error with `nil` values for Sequel
