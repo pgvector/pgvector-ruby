@@ -143,7 +143,7 @@ class TestSequel < Minitest::Test
     results = Item.nearest_neighbors(:sparse_embedding, Pgvector::SparseVector.new([1, 1, 1]), distance: "euclidean").limit(5)
     assert_equal [1, 3, 2], results.map(&:id)
     assert_equal [0, 1, Math.sqrt(3)], results.map { |r| r[:neighbor_distance] }
-    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map(&:sparse_embedding).map(&:to_a)
+    assert_equal [[1, 1, 1], [1, 1, 2], [2, 2, 2]], results.map { |v| v.sparse_embedding.to_a }
   end
 
   def test_instance_sparsevec_euclidean
