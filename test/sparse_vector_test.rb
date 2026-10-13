@@ -42,4 +42,12 @@ class SparseVectorTest < Minitest::Test
     vec = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0])
     assert_equal "{1:1.0,3:2.0,5:3.0}/6", vec.to_s
   end
+
+  def test_equality
+    a = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0])
+    b = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0])
+    c = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 1])
+    assert_equal a, b
+    refute_equal a, c
+  end
 end

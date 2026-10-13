@@ -1,5 +1,6 @@
 ## 0.4.0 (unreleased)
 
+- Fixed equality for `Vector`, `HalfVector`, `Bit`, and `SparseVector` classes
 - Dropped support for Ruby < 3.3
 
 ## 0.3.3 (2026-03-18)

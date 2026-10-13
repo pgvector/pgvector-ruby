@@ -38,6 +38,18 @@ module Pgvector
       buffer
     end
 
+    def ==(other)
+      eql?(other)
+    end
+
+    def eql?(other)
+      other.is_a?(self.class) && dimensions == other.dimensions && indices == other.indices && values == other.values
+    end
+
+    def hash
+      [dimensions, indices, values].hash
+    end
+
     private
 
     def from_hash(data, dimensions)

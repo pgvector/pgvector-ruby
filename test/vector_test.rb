@@ -11,6 +11,14 @@ class VectorTest < Minitest::Test
     assert_equal [1, 2, 3], vec.to_a
   end
 
+  def test_equality
+    a = Pgvector::Vector.new([1, 2, 3])
+    b = Pgvector::Vector.new([1, 2, 3])
+    c = Pgvector::Vector.new([1, 2, 4])
+    assert_equal a, b
+    refute_equal a, c
+  end
+
   def test_numo
     skip if ["jruby", "truffleruby"].include?(RUBY_ENGINE)
 

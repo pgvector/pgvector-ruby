@@ -10,4 +10,12 @@ class BitTest < Minitest::Test
     vec = Pgvector::Bit.new([true, false, true])
     assert_equal [true, false, true], vec.to_a
   end
+
+  def test_equality
+    a = Pgvector::Bit.new([true, false, true])
+    b = Pgvector::Bit.new([true, false, true])
+    c = Pgvector::Bit.new([true, false, false])
+    assert_equal a, b
+    refute_equal a, c
+  end
 end

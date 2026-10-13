@@ -28,5 +28,17 @@ module Pgvector
     def to_binary
       [@data.length, @data].pack("l>B*")
     end
+
+    def ==(other)
+      eql?(other)
+    end
+
+    def eql?(other)
+      other.is_a?(self.class) && to_s == other.to_s
+    end
+
+    def hash
+      to_s.hash
+    end
   end
 end

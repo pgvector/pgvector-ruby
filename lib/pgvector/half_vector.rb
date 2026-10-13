@@ -15,5 +15,17 @@ module Pgvector
     def to_a
       @data
     end
+
+    def ==(other)
+      eql?(other)
+    end
+
+    def eql?(other)
+      other.is_a?(self.class) && to_a == other.to_a
+    end
+
+    def hash
+      to_a.hash
+    end
   end
 end

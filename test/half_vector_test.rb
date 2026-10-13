@@ -10,4 +10,12 @@ class HalfVectorTest < Minitest::Test
     vec = Pgvector::HalfVector.new([1, 2, 3])
     assert_equal [1, 2, 3], vec.to_a
   end
+
+  def test_equality
+    a = Pgvector::HalfVector.new([1, 2, 3])
+    b = Pgvector::HalfVector.new([1, 2, 3])
+    c = Pgvector::HalfVector.new([1, 2, 4])
+    assert_equal a, b
+    refute_equal a, c
+  end
 end
