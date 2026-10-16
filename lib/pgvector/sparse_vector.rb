@@ -96,6 +96,7 @@ module Pgvector
         if elements.nil? || dimensions.nil? || elements[0] != "{" || elements[-1] != "}"
           raise "malformed sparsevec literal"
         end
+
         indices = []
         values = []
         elements[1..-2].split(",").each do |e|
@@ -111,6 +112,7 @@ module Pgvector
         if string.bytesize < 12
           raise ArgumentError, "invalid length"
         end
+
         dim, nnz, unused = string.unpack("l>l>l>")
         if string.bytesize != 12 + 8 * nnz
           raise ArgumentError, "invalid length"
@@ -118,6 +120,7 @@ module Pgvector
         if unused != 0
           raise ArgumentError, "expected unused to be 0"
         end
+
         indices = string.unpack("l>#{nnz}", offset: 12)
         values = string.unpack("g#{nnz}", offset: 12 + nnz * 4)
         from_parts(dim, indices, values)

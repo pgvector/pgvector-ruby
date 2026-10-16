@@ -15,6 +15,7 @@ module Pgvector
       if string[0] != "[" || string[-1] != "]"
         raise ArgumentError, "malformed vector literal"
       end
+
       data = string[1..-2].split(",").map(&:to_f)
       allocate.tap do |vec|
         vec.instance_variable_set(:@data, data)
@@ -26,6 +27,7 @@ module Pgvector
       if string.bytesize < 4
         raise ArgumentError, "invalid length"
       end
+
       dim, unused = string.unpack("nn")
       if string.bytesize != 4 + 4 * dim
         raise ArgumentError, "invalid length"
@@ -33,8 +35,10 @@ module Pgvector
       if unused != 0
         raise ArgumentError, "expected unused to be 0"
       end
+
+      data = string.unpack("g#{dim}", offset: 4)
       allocate.tap do |vec|
-        vec.instance_variable_set(:@data, string.unpack("g#{dim}", offset: 4))
+        vec.instance_variable_set(:@data, data)
       end
     end
 

@@ -9,6 +9,7 @@ module Pgvector
       if string[0] != "[" || string[-1] != "]"
         raise ArgumentError, "malformed halfvec literal"
       end
+
       data = string[1..-2].split(",").map(&:to_f)
       allocate.tap do |vec|
         vec.instance_variable_set(:@data, data)
