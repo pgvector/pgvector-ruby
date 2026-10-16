@@ -12,8 +12,9 @@ module Pgvector
 
     def self.from_text(string)
       string = string.to_str
+      data = string[1..-2].split(",").map(&:to_f)
       allocate.tap do |vec|
-        vec.instance_variable_set(:@data, string[1..-2].split(",").map(&:to_f))
+        vec.instance_variable_set(:@data, data)
       end
     end
 
