@@ -53,10 +53,15 @@ module Pgvector
     private
 
     def from_hash(data, dimensions)
-      elements = data.select { |_, v| v != 0 }.sort
+      elements =
+        data.filter_map do |i, v|
+          v = v.to_f
+          [i.to_i, v] if v != 0
+        end
+      elements.sort!
       @dimensions = dimensions.to_i
-      @indices = elements.map { |v| v[0].to_i }
-      @values = elements.map { |v| v[1].to_f }
+      @indices = elements.map(&:first)
+      @values = elements.map(&:last)
     end
 
     def from_array(arr)
@@ -65,9 +70,10 @@ module Pgvector
       @indices = []
       @values = []
       arr.each_with_index do |v, i|
+        v = v.to_f
         if v != 0
           @indices << i
-          @values << v.to_f
+          @values << v
         end
       end
     end
