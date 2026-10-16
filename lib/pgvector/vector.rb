@@ -13,7 +13,7 @@ module Pgvector
     def self.from_text(string)
       string = string.to_str
       if string[0] != "[" || string[-1] != "]"
-        raise "malformed vector literal"
+        raise ArgumentError, "malformed vector literal"
       end
       data = string[1..-2].split(",").map(&:to_f)
       allocate.tap do |vec|
@@ -24,14 +24,14 @@ module Pgvector
     def self.from_binary(string)
       string = string.to_str
       if string.bytesize < 4
-        raise "invalid length"
+        raise ArgumentError, "invalid length"
       end
       dim, unused = string.unpack("nn")
       if string.bytesize != 4 + 4 * dim
-        raise "invalid length"
+        raise ArgumentError, "invalid length"
       end
       if unused != 0
-        raise "expected unused to be 0"
+        raise ArgumentError, "expected unused to be 0"
       end
       allocate.tap do |vec|
         vec.instance_variable_set(:@data, string.unpack("g#{dim}", offset: 4))

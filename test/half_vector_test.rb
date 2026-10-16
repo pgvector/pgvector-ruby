@@ -12,7 +12,7 @@ class HalfVectorTest < Minitest::Test
   end
 
   def test_from_text_invalid
-    error = assert_raises(RuntimeError) do
+    error = assert_raises(ArgumentError) do
       Pgvector::HalfVector.from_text("")
     end
     assert_equal "malformed halfvec literal", error.message

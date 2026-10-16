@@ -12,14 +12,14 @@ class VectorTest < Minitest::Test
   end
 
   def test_from_text_invalid
-    error = assert_raises(RuntimeError) do
+    error = assert_raises(ArgumentError) do
       Pgvector::Vector.from_text("")
     end
     assert_equal "malformed vector literal", error.message
   end
 
   def test_from_binary_invalid
-    error = assert_raises(RuntimeError) do
+    error = assert_raises(ArgumentError) do
       Pgvector::Vector.from_binary("")
     end
     assert_equal "invalid length", error.message

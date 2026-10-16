@@ -109,14 +109,14 @@ module Pgvector
       def from_binary(string)
         string = string.to_str
         if string.bytesize < 12
-          raise "invalid length"
+          raise ArgumentError, "invalid length"
         end
         dim, nnz, unused = string.unpack("l>l>l>")
         if string.bytesize != 12 + 8 * nnz
-          raise "invalid length"
+          raise ArgumentError, "invalid length"
         end
         if unused != 0
-          raise "expected unused to be 0"
+          raise ArgumentError, "expected unused to be 0"
         end
         indices = string.unpack("l>#{nnz}", offset: 12)
         values = string.unpack("g#{nnz}", offset: 12 + nnz * 4)
