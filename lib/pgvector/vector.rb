@@ -15,9 +15,10 @@ module Pgvector
     end
 
     def self.from_binary(string)
-      dim, unused = string[0, 4].unpack("nn")
+      dim, unused = string.unpack("nn")
+      raise "invalid length" if string.bytesize != 4 + 4 * dim
       raise "expected unused to be 0" if unused != 0
-      Vector.new(string[4..-1].unpack("g#{dim}"))
+      Vector.new(string.unpack("g#{dim}", offset: 4))
     end
 
     def to_s

@@ -14,7 +14,8 @@ module Pgvector
 
     def self.from_binary(string)
       length, data = string.unpack("l>B*")
-      Bit.new(data[...length])
+      raise "invalid length" if string.bytesize != 4 + (length + 7) / 8
+      Bit.new(data.byteslice(0, length))
     end
 
     def to_s
