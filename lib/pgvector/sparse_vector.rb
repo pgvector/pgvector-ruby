@@ -80,6 +80,7 @@ module Pgvector
 
     class << self
       def from_text(string)
+        string = string.to_str
         elements, dimensions = string.split("/", 2)
         indices = []
         values = []
@@ -92,6 +93,7 @@ module Pgvector
       end
 
       def from_binary(string)
+        string = string.to_str
         dim, nnz, unused = string.unpack("l>l>l>")
         raise "invalid length" if string.bytesize != 12 + 8 * nnz
         raise "expected unused to be 0" if unused != 0

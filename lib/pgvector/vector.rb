@@ -11,10 +11,12 @@ module Pgvector
     end
 
     def self.from_text(string)
+      string = string.to_str
       Vector.new(string[1..-2].split(",").map(&:to_f))
     end
 
     def self.from_binary(string)
+      string = string.to_str
       dim, unused = string.unpack("nn")
       raise "invalid length" if string.bytesize != 4 + 4 * dim
       raise "expected unused to be 0" if unused != 0

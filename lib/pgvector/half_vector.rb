@@ -5,6 +5,7 @@ module Pgvector
     end
 
     def self.from_text(string)
+      string = string.to_str
       new(string[1..-2].split(",").map(&:to_f))
     end
 
