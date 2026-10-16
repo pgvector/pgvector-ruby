@@ -24,8 +24,12 @@ module Pgvector
     def self.from_binary(string)
       string = string.to_str
       dim, unused = string.unpack("nn")
-      raise "invalid length" if string.bytesize != 4 + 4 * dim
-      raise "expected unused to be 0" if unused != 0
+      if string.bytesize != 4 + 4 * dim
+        raise "invalid length"
+      end
+      if unused != 0
+        raise "expected unused to be 0"
+      end
       allocate.tap do |vec|
         vec.instance_variable_set(:@data, string.unpack("g#{dim}", offset: 4))
       end

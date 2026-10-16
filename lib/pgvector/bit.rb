@@ -23,7 +23,9 @@ module Pgvector
     def self.from_binary(string)
       string = string.to_str
       length, data = string.unpack("l>B*")
-      raise "invalid length" if string.bytesize != 4 + (length + 7) / 8
+      if string.bytesize != 4 + (length + 7) / 8
+        raise "invalid length"
+      end
       allocate.tap do |v|
         v.instance_variable_set(:@data, data.byteslice(0, length))
       end
