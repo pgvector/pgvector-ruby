@@ -103,11 +103,11 @@ module Pgvector
       private
 
       def from_parts(dimensions, indices, values)
-        vec = allocate
-        vec.instance_variable_set(:@dimensions, dimensions)
-        vec.instance_variable_set(:@indices, indices)
-        vec.instance_variable_set(:@values, values)
-        vec
+        allocate.tap do |vec|
+          vec.instance_variable_set(:@dimensions, dimensions)
+          vec.instance_variable_set(:@indices, indices)
+          vec.instance_variable_set(:@values, values)
+        end
       end
     end
   end
