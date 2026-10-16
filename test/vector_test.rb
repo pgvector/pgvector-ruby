@@ -11,6 +11,13 @@ class VectorTest < Minitest::Test
     assert_equal [1, 2, 3], vec.to_a
   end
 
+  def test_from_text_invalid
+    error = assert_raises(RuntimeError) do
+      Pgvector::Vector.from_text("")
+    end
+    assert_equal "malformed vector literal", error.message
+  end
+
   def test_equality
     a = Pgvector::Vector.new([1, 2, 3])
     b = Pgvector::Vector.new([1, 2, 3])

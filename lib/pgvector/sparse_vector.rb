@@ -93,6 +93,9 @@ module Pgvector
       def from_text(string)
         string = string.to_str
         elements, dimensions = string.split("/", 2)
+        if elements.nil? || dimensions.nil? || elements[0] != "{" || elements[-1] != "}"
+          raise "malformed sparsevec literal"
+        end
         indices = []
         values = []
         elements[1..-2].split(",").each do |e|

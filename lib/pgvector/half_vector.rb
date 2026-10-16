@@ -6,6 +6,9 @@ module Pgvector
 
     def self.from_text(string)
       string = string.to_str
+      if string[0] != "[" || string[-1] != "]"
+        raise "malformed halfvec literal"
+      end
       data = string[1..-2].split(",").map(&:to_f)
       allocate.tap do |vec|
         vec.instance_variable_set(:@data, data)
