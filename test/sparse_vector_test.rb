@@ -52,6 +52,27 @@ class SparseVectorTest < Minitest::Test
     assert_equal [1, 0, 2, 0, 3, 0], vec.to_a
   end
 
+  def test_from_text_negative_index
+    error = assert_raises(RuntimeError) do
+      Pgvector::SparseVector.from_text("{0:1}/3")
+    end
+    assert_equal "sparsevec index out of bounds", error.message
+  end
+
+  def test_from_text_higher_index
+    error = assert_raises(RuntimeError) do
+      Pgvector::SparseVector.from_text("{4:1}/3")
+    end
+    assert_equal "sparsevec index out of bounds", error.message
+  end
+
+  def test_from_text_negative_dimensions
+    error = assert_raises(RuntimeError) do
+      Pgvector::SparseVector.from_text("{}/-1")
+    end
+    assert_equal "sparsevec cannot have negative dimensions", error.message
+  end
+
   def test_accessors
     vec = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0])
     assert_equal 6, vec.dimensions
