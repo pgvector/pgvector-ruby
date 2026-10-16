@@ -1,14 +1,38 @@
 require_relative "test_helper"
 
 class BitTest < Minitest::Test
-  def test_to_s
+  def test_array
     vec = Pgvector::Bit.new([true, false, true])
-    assert_equal "101", vec.to_s
+    assert_equal vec.to_s, "101"
   end
 
-  def test_to_a
-    vec = Pgvector::Bit.new([true, false, true])
+  def test_array_empty
+    vec = Pgvector::Bit.new([])
+    assert_equal vec.to_s, ""
+  end
+
+  def test_array_nil
+    error = assert_raises(ArgumentError) do
+      Pgvector::Bit.new([true, false, nil])
+    end
+    assert_equal "expected bool array", error.message
+  end
+
+  def test_string
+    vec = Pgvector::Bit.new("101")
     assert_equal [true, false, true], vec.to_a
+  end
+
+  def test_string_empty
+    vec = Pgvector::Bit.new("")
+    assert_equal [], vec.to_a
+  end
+
+  def test_string_two
+    error = assert_raises(ArgumentError) do
+      Pgvector::Bit.new("201")
+    end
+    assert_equal "expected bit string", error.message
   end
 
   def test_equality

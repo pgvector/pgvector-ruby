@@ -2,9 +2,17 @@ module Pgvector
   class Bit
     def initialize(data)
       if data.is_a?(Array)
-        @data = data.map { |v| v ? "1" : "0" }.join
+        bits = {true => "1", false => 0}
+        begin
+          @data = data.map { |v| bits.fetch(v) }.join
+        rescue KeyError
+          raise ArgumentError, "expected bool array"
+        end
       else
         @data = data.to_str
+        unless @data.match?(/\A[01]*\z/)
+          raise ArgumentError, "expected bit string"
+        end
       end
     end
 
