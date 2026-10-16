@@ -25,13 +25,15 @@ module Pgvector
       if string.bytesize < 4
         raise ArgumentError, "invalid length"
       end
+
       length = string.unpack1("l>")
       if string.bytesize != 4 + (length + 7) / 8
         raise ArgumentError, "invalid length"
       end
-      data = string.unpack1("B*", offset: 4)
+
+      data = string.unpack1("B*", offset: 4).byteslice(0, length)
       allocate.tap do |v|
-        v.instance_variable_set(:@data, data.byteslice(0, length))
+        v.instance_variable_set(:@data, data)
       end
     end
 
