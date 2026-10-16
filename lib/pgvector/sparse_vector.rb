@@ -62,6 +62,7 @@ module Pgvector
       @dimensions = dimensions.to_i
       @indices = elements.map(&:first)
       @values = elements.map(&:last)
+      validate
     end
 
     def from_array(arr)
@@ -75,6 +76,16 @@ module Pgvector
           @indices << i
           @values << v
         end
+      end
+    end
+
+    def validate
+      if @dimensions < 0
+        raise "sparsevec cannot have negative dimensions"
+      end
+
+      if @indices.any? { |i| i < 0 || i >= @dimensions }
+        raise "sparsevec index out of bounds"
       end
     end
 
@@ -109,6 +120,7 @@ module Pgvector
           vec.instance_variable_set(:@dimensions, dimensions)
           vec.instance_variable_set(:@indices, indices)
           vec.instance_variable_set(:@values, values)
+          vec.send(:validate)
         end
       end
     end

@@ -7,6 +7,27 @@ class SparseVectorTest < Minitest::Test
     assert_equal [0, 2, 4], vec.indices
   end
 
+  def test_hash_negative_index
+    error = assert_raises(RuntimeError) do
+      Pgvector::SparseVector.new({-1 => 1}, 3)
+    end
+    assert_equal "sparsevec index out of bounds", error.message
+  end
+
+  def test_hash_higher_index
+    error = assert_raises(RuntimeError) do
+      Pgvector::SparseVector.new({3 => 1}, 3)
+    end
+    assert_equal "sparsevec index out of bounds", error.message
+  end
+
+  def test_hash_negative_dimensions
+    error = assert_raises(RuntimeError) do
+      Pgvector::SparseVector.new({}, -1)
+    end
+    assert_equal "sparsevec cannot have negative dimensions", error.message
+  end
+
   def test_hash_no_dimensions
     error = assert_raises(ArgumentError) do
       Pgvector::SparseVector.new({0 => 1, 2 => 2, 4 => 3})
