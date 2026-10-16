@@ -23,6 +23,9 @@ module Pgvector
 
     def self.from_binary(string)
       string = string.to_str
+      if string.bytesize < 4
+        raise "invalid length"
+      end
       dim, unused = string.unpack("nn")
       if string.bytesize != 4 + 4 * dim
         raise "invalid length"

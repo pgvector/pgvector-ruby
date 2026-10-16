@@ -108,6 +108,9 @@ module Pgvector
 
       def from_binary(string)
         string = string.to_str
+        if string.bytesize < 12
+          raise "invalid length"
+        end
         dim, nnz, unused = string.unpack("l>l>l>")
         if string.bytesize != 12 + 8 * nnz
           raise "invalid length"

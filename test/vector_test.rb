@@ -18,6 +18,13 @@ class VectorTest < Minitest::Test
     assert_equal "malformed vector literal", error.message
   end
 
+  def test_from_binary_invalid
+    error = assert_raises(RuntimeError) do
+      Pgvector::Vector.from_binary("")
+    end
+    assert_equal "invalid length", error.message
+  end
+
   def test_equality
     a = Pgvector::Vector.new([1, 2, 3])
     b = Pgvector::Vector.new([1, 2, 3])
