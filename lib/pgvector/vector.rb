@@ -12,7 +12,9 @@ module Pgvector
 
     def self.from_text(string)
       string = string.to_str
-      Vector.new(string[1..-2].split(",").map(&:to_f))
+      allocate.tap do |vec|
+        vec.instance_variable_set(:@data, string[1..-2].split(",").map(&:to_f))
+      end
     end
 
     def self.from_binary(string)
@@ -20,7 +22,9 @@ module Pgvector
       dim, unused = string.unpack("nn")
       raise "invalid length" if string.bytesize != 4 + 4 * dim
       raise "expected unused to be 0" if unused != 0
-      Vector.new(string.unpack("g#{dim}", offset: 4))
+      allocate.tap do |vec|
+        vec.instance_variable_set(:@data, string.unpack("g#{dim}", offset: 4))
+      end
     end
 
     def to_s
