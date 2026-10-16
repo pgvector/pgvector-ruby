@@ -52,6 +52,10 @@ class SparseVectorTest < Minitest::Test
     assert_equal [1, 0, 2, 0, 3, 0], vec.to_a
   end
 
+  def test_from_text_zero_dimensions
+    assert_empty Pgvector::SparseVector.from_text("{}/0").to_a
+  end
+
   def test_from_text_invalid
     error = assert_raises(RuntimeError) do
       Pgvector::SparseVector.from_text("")

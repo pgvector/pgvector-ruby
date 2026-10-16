@@ -11,6 +11,10 @@ class VectorTest < Minitest::Test
     assert_equal [1, 2, 3], vec.to_a
   end
 
+  def test_from_text_zero_dimensions
+    assert_empty Pgvector::Vector.from_text("[]").to_a
+  end
+
   def test_from_text_invalid
     error = assert_raises(ArgumentError) do
       Pgvector::Vector.from_text("")
