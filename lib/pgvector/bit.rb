@@ -31,7 +31,7 @@ module Pgvector
         raise ArgumentError, "invalid length"
       end
 
-      data = string.unpack1("B*", offset: 4).byteslice(0, length)
+      data = string.unpack1("B#{length}", offset: 4)
       allocate.tap do |v|
         v.instance_variable_set(:@data, data)
       end
