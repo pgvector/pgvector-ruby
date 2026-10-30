@@ -47,6 +47,12 @@ class VectorTest < Minitest::Test
     assert_match "invalid value for Float()", error.message
   end
 
+  def test_from_text_out_of_range
+    capture_io do
+      assert_equal Pgvector::Vector.new([Float::INFINITY]), Pgvector::Vector.from_text("[2e308]")
+    end
+  end
+
   def test_from_binary
     assert_equal Pgvector::Vector.new([1.5, 2, 3]), Pgvector::Vector.from_binary([3, 0, 1.5, 2, 3].pack("s>s>g*"))
   end
