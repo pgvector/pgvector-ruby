@@ -101,10 +101,10 @@ module Pgvector
         values = []
         elements[1..-2].split(",").each do |e|
           index, value = e.split(":", 2)
-          indices << index.to_i - 1
-          values << value.to_f
+          indices << Integer(index, 10) - 1
+          values << Float(value)
         end
-        from_parts(dimensions.to_i, indices, values)
+        from_parts(Integer(dimensions, 10), indices, values)
       end
 
       def from_binary(string)

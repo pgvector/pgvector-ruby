@@ -10,7 +10,7 @@ module Pgvector
         raise ArgumentError, "malformed halfvec literal"
       end
 
-      data = string[1..-2].split(",").map(&:to_f)
+      data = string[1..-2].split(",").map { |v| Float(v) }
       allocate.tap do |vec|
         vec.instance_variable_set(:@data, data)
       end

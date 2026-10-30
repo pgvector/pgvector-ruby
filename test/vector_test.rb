@@ -11,18 +11,47 @@ class VectorTest < Minitest::Test
     assert_equal [1, 2, 3], vec.to_a
   end
 
-  def test_from_text_zero_dimensions
-    assert_empty Pgvector::Vector.from_text("[]").to_a
+  def test_from_text
+    assert_equal Pgvector::Vector.new([1.5, 2, 3]), Pgvector::Vector.from_text("[1.5,2,3]")
   end
 
-  def test_from_text_invalid
+  def test_from_text_zero_dimensions
+    assert_equal Pgvector::Vector.new([]), Pgvector::Vector.from_text("[]")
+  end
+
+  def test_from_text_zero_length
     error = assert_raises(ArgumentError) do
       Pgvector::Vector.from_text("")
     end
     assert_equal "malformed vector literal", error.message
   end
 
-  def test_from_binary_invalid
+  def test_from_text_open_bracket
+    error = assert_raises(ArgumentError) do
+      Pgvector::Vector.from_text("{1]")
+    end
+    assert_equal "malformed vector literal", error.message
+  end
+
+  def test_from_text_close_bracket
+    error = assert_raises(ArgumentError) do
+      Pgvector::Vector.from_text("[1}")
+    end
+    assert_equal "malformed vector literal", error.message
+  end
+
+  def test_from_text_non_number
+    error = assert_raises(ArgumentError) do
+      Pgvector::Vector.from_text("[a]")
+    end
+    assert_match "invalid value for Float()", error.message
+  end
+
+  def test_from_binary
+    assert_equal Pgvector::Vector.new([1.5, 2, 3]), Pgvector::Vector.from_binary([3, 0, 1.5, 2, 3].pack("s>s>g*"))
+  end
+
+  def test_from_binary_zero_length
     error = assert_raises(ArgumentError) do
       Pgvector::Vector.from_binary("")
     end
