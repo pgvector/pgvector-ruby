@@ -37,6 +37,7 @@ class BitTest < Minitest::Test
 
   def test_from_binary
     assert_equal Pgvector::Bit.new("101"), Pgvector::Bit.from_binary([3, 5 << 5].pack("l>c"))
+    assert_equal Pgvector::Bit.new("011111110"), Pgvector::Bit.from_binary([9, 127, 0].pack("l>cc"))
   end
 
   def test_from_binary_zero_length
