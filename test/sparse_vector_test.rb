@@ -98,6 +98,18 @@ class SparseVectorTest < Minitest::Test
     assert_equal "sparsevec cannot have negative dimensions", error.message
   end
 
+  def test_from_binary
+    vec = Pgvector::SparseVector.new({0 => 1, 2 => 2, 4 => 3}, 6)
+    assert_equal vec, Pgvector::SparseVector.from_binary([6, 3, 0, 0, 2, 4, 1, 2, 3].pack("l>l>l>l>l>l>ggg"))
+  end
+
+  def test_from_binary_zero_length
+    error = assert_raises(ArgumentError) do
+      Pgvector::SparseVector.from_binary("")
+    end
+    assert_equal "invalid length", error.message
+  end
+
   def test_accessors
     vec = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0])
     assert_equal 6, vec.dimensions
