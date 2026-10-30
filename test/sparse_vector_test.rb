@@ -77,6 +77,20 @@ class SparseVectorTest < Minitest::Test
     assert_equal "sparsevec index out of bounds", error.message
   end
 
+  def test_from_text_non_number_index
+    error = assert_raises(ArgumentError) do
+      Pgvector::SparseVector.from_text("{a:1}/1")
+    end
+    assert_match "invalid value for Integer()", error.message
+  end
+
+  def test_from_text_non_number_value
+    error = assert_raises(ArgumentError) do
+      Pgvector::SparseVector.from_text("{1:a}/1")
+    end
+    assert_match "invalid value for Float()", error.message
+  end
+
   def test_from_text_negative_dimensions
     error = assert_raises(RuntimeError) do
       Pgvector::SparseVector.from_text("{}/-1")
