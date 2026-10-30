@@ -58,6 +58,13 @@ class VectorTest < Minitest::Test
     assert_equal "invalid length", error.message
   end
 
+  def test_from_binary_non_zero_unused
+    error = assert_raises(ArgumentError) do
+      Pgvector::Vector.from_binary([0, 1].pack("s>s>"))
+    end
+    assert_equal "expected unused to be 0", error.message
+  end
+
   def test_equality
     a = Pgvector::Vector.new([1, 2, 3])
     b = Pgvector::Vector.new([1, 2, 3])

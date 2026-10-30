@@ -110,6 +110,13 @@ class SparseVectorTest < Minitest::Test
     assert_equal "invalid length", error.message
   end
 
+  def test_from_binary_non_zero_unused
+    error = assert_raises(ArgumentError) do
+      Pgvector::SparseVector.from_binary([0, 0, 1].pack("l>l>l>"))
+    end
+    assert_equal "expected unused to be 0", error.message
+  end
+
   def test_accessors
     vec = Pgvector::SparseVector.new([1, 0, 2, 0, 3, 0])
     assert_equal 6, vec.dimensions
