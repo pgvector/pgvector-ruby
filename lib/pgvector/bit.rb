@@ -27,7 +27,7 @@ module Pgvector
       end
 
       length = string.unpack1("l>")
-      if string.bytesize != 4 + (length + 7) / 8
+      if length < 0 || string.bytesize != 4 + (length + 7) / 8
         raise ArgumentError, "invalid length"
       end
 
