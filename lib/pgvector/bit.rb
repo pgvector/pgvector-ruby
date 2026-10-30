@@ -4,16 +4,19 @@ module Pgvector
       if data.is_a?(Array)
         bits = {true => "1", false => 0}
         begin
-          @data = data.map { |v| bits.fetch(v) }.join
+          data = data.map { |v| bits.fetch(v) }.join
         rescue KeyError
           raise ArgumentError, "expected bool array"
         end
       else
-        @data = data.to_str
-        unless @data.match?(/\A[01]*\z/)
+        data = data.to_str
+        unless data.match?(/\A[01]*\z/)
           raise ArgumentError, "expected bit string"
         end
       end
+
+      @length = data.bytesize
+      @data = [data].pack("B*")
     end
 
     def self.from_text(string)
@@ -31,22 +34,23 @@ module Pgvector
         raise ArgumentError, "invalid length"
       end
 
-      data = string.unpack1("B#{length}", offset: 4)
+      data = string.byteslice(4..)
       allocate.tap do |v|
+        v.instance_variable_set(:@length, length)
         v.instance_variable_set(:@data, data)
       end
     end
 
     def to_s
-      @data
+      @data.unpack1("B#{@length.to_i}")
     end
 
     def to_a
-      @data.each_char.map { |v| v != "0" }
+      to_s.each_char.map { |v| v != "0" }
     end
 
     def to_binary
-      [@data.length, @data].pack("l>B*")
+      [@length].pack("l>") + @data
     end
 
     def ==(other)
